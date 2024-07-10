@@ -9,6 +9,7 @@ declare const __dirname:string;
 export default defineConfig({
     root:`${__dirname}/web/html`,
     mode:"development",
+    base:"",
 
     plugins:[
         svelte(),
