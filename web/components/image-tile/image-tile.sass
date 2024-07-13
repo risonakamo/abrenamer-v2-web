@@ -1,19 +1,36 @@
 .image-tile
-    width: 200px
-    height: 200px
-    display: flex
-    align-items: center
-    overflow: hidden
-    justify-content: center
+    --width: 200px
+
     user-select: none
+    font-family: roboto
+    width: var(--width)
 
-    img
-        // use for wide images
-        &.wide-fit
-            width: 100%
+    .img-contain
+        width: var(--width)
+        height: 200px
+        display: flex
+        align-items: center
+        overflow: hidden
+        justify-content: center
+        border-radius: 8px
+        border: 3px solid transparent
+        cursor: pointer
+        box-sizing: border-box
 
-        &.tall-fit
-            height: 100%
+        img
+            // use for wide images
+            &.wide-fit
+                width: 100%
 
-        &.loading
-            opacity: 0
+            &.tall-fit
+                height: 100%
+
+            &.loading
+                opacity: 0
+
+        &:hover
+            border-color: black
+
+    .caption
+        text-align: center
+        margin-top: 6px

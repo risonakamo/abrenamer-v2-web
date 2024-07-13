@@ -15,13 +15,13 @@
 </script>
 
 <Story name="wide">
-  <ImageTile imgSrc={Wide1}/>
+  <ImageTile imgSrc={Wide1} fileName="wide1.jpeg"/>
 </Story>
 
 <Story name="tall">
-  <ImageTile imgSrc={Tall1}/>
+  <ImageTile imgSrc={Tall1} fileName="tall1.png"/>
 </Story>
 
 <Story name="square">
-  <ImageTile imgSrc={Sqaure1}/>
+  <ImageTile imgSrc={Sqaure1} fileName="square1.png"/>
 </Story>

@@ -1,6 +1,14 @@
 <script lang="ts">
+  /** a image tile representing an item to be renamed. item does not actually have to be
+   *  an image */
+
   // --- props
-  export var imgSrc:string;
+  // image of the item
+  export var imgSrc:string|undefined=undefined;
+  // filename of the item to display below
+  export var fileName:string="missing filename";
+  // filetype of item. displayed in place if img src is not provided
+  export var fileType:"???";
 
   // controls which fit class appears
   var isWide:boolean=false;
@@ -14,8 +22,6 @@
    * reveal the image */
   function h_imgLoad():void
   {
-    console.log("loaded",imageRef.naturalWidth,imageRef.naturalHeight);
-
     if (imageRef.naturalWidth>imageRef.naturalHeight)
     {
       isWide=true;
@@ -37,6 +43,11 @@
 </style>
 
 <div class="image-tile">
-  <img src={imgSrc} on:load={h_imgLoad} alt="missing img" bind:this={imageRef}
-    class:wide-fit={isWide} class:tall-fit={isTall} class:loading={isLoading}/>
+  <div class="img-contain">
+    <img src={imgSrc} on:load={h_imgLoad} alt="missing img" bind:this={imageRef}
+      class:wide-fit={isWide} class:tall-fit={isTall} class:loading={isLoading}/>
+  </div>
+  <div class="caption">
+    {fileName}
+  </div>
 </div>
