@@ -1,0 +1,19 @@
+.image-tile
+    width: 200px
+    height: 200px
+    display: flex
+    align-items: center
+    overflow: hidden
+    justify-content: center
+    user-select: none
+
+    img
+        // use for wide images
+        &.wide-fit
+            width: 100%
+
+        &.tall-fit
+            height: 100%
+
+        &.loading
+            opacity: 0
