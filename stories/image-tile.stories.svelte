@@ -1,8 +1,5 @@
 <script context="module">
   import ImageTile from "@/components/image-tile/image-tile.svelte";
-  import Wide1 from "@/assets/wide1.jpeg";
-  import Tall1 from "@/assets/tall1.png";
-  import Sqaure1 from "@/assets/square1.png";
 
   export const meta={
     title:"image tile",
@@ -11,7 +8,11 @@
 </script>
 
 <script>
-  import {Story,Template} from "@storybook/addon-svelte-csf";
+  import {Story} from "@storybook/addon-svelte-csf";
+
+  import Wide1 from "@/assets/wide1.jpeg";
+  import Tall1 from "@/assets/tall1.png";
+  import Sqaure1 from "@/assets/square1.png";
 </script>
 
 <Story name="wide">
@@ -28,4 +29,12 @@
 
 <Story name="non image">
   <ImageTile fileName="something.txt" fileType="txt"/>
+</Story>
+
+<Story name="wide selected">
+  <ImageTile imgSrc={Wide1} fileName="wide1.jpeg" selected selectedCount={3}/>
+</Story>
+
+<Story name="non image selected">
+  <ImageTile fileName="something.txt" fileType="txt" selected selectedCount={1}/>
 </Story>

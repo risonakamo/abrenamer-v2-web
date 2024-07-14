@@ -8,7 +8,11 @@
   // filename of the item to display below
   export var fileName:string="missing filename";
   // filetype of item. displayed in place if img src is not provided
-  export var fileType:"???";
+  export var fileType:string="???";
+
+  // set selected state
+  export var selected:boolean=false;
+  export var selectedCount:number=-1;
 
   // controls which fit class appears
   var isWide:boolean=false;
@@ -46,12 +50,16 @@
 </style>
 
 <div class="image-tile">
-  <div class="img-contain">
+  <div class="img-contain" class:selected={selected}>
+    <div class="selected-overlay">
+      <p>{selectedCount}</p>
+    </div>
+
     {#if imageMode}
       <img src={imgSrc} on:load={h_imgLoad} alt="missing img" bind:this={imageRef}
         class:wide-fit={isWide} class:tall-fit={isTall} class:loading={isLoading}/>
     {:else}
-      <p>{fileType}</p>
+      <p class="filetype">{fileType}</p>
     {/if}
   </div>
   <div class="caption">

@@ -16,6 +16,7 @@
         border: 3px solid transparent
         cursor: pointer
         box-sizing: border-box
+        position: relative
 
         img
             // use for wide images
@@ -28,11 +29,35 @@
             &.loading
                 opacity: 0
 
-        p
+        p.filetype
             font-size: 20px
+
+        .selected-overlay
+            position: absolute
+            top: 0
+            left: 0
+            height: 100%
+            width: 100%
+            display: flex
+            align-items: center
+            justify-content: center
+            background: #6382e647
+            color: white
+            font-size: 30px
+            display: none
+
+            p
+                text-shadow: 0px 0px 5px black
 
         &:hover
             border-color: black
+
+        &.selected
+            border-color: #1f6ca6
+            border-style: dashed
+
+            .selected-overlay
+                display: flex
 
     .caption
         text-align: center
