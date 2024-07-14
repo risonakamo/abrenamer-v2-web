@@ -8,33 +8,47 @@
 </script>
 
 <script>
-  import {Story} from "@storybook/addon-svelte-csf";
+  import {Story,Template} from "@storybook/addon-svelte-csf";
 
   import Wide1 from "@/assets/wide1.jpeg";
   import Tall1 from "@/assets/tall1.png";
   import Sqaure1 from "@/assets/square1.png";
 </script>
 
-<Story name="wide">
-  <ImageTile imgSrc={Wide1} fileName="wide1.jpeg"/>
-</Story>
+<Template let:args>
+  <ImageTile {...args}/>
+</Template>
 
-<Story name="tall">
-  <ImageTile imgSrc={Tall1} fileName="tall1.png"/>
-</Story>
+<Story name="wide" args={{
+  imgSrc:Wide1,
+  fileName:"wide1.jpeg"
+}}/>
 
-<Story name="square">
-  <ImageTile imgSrc={Sqaure1} fileName="square1.png"/>
-</Story>
+<Story name="tall" args={{
+  imgSrc:Tall1,
+  fileName:"tall1.png"
+}}/>
 
-<Story name="non image">
-  <ImageTile fileName="something.txt" fileType="txt"/>
-</Story>
+<Story name="square" args={{
+  imgSrc:Sqaure1,
+  fileName:"square1.png"
+}}/>
 
-<Story name="wide selected">
-  <ImageTile imgSrc={Wide1} fileName="wide1.jpeg" selected selectedCount={3}/>
-</Story>
+<Story name="non image" args={{
+  fileType:"txt",
+  fileName:"something.txt"
+}}/>
 
-<Story name="non image selected">
-  <ImageTile fileName="something.txt" fileType="txt" selected selectedCount={1}/>
-</Story>
+<Story name="wide selected" args={{
+  imgSrc:Wide1,
+  fileName:"wide1.jpeg",
+  selected:true,
+  selectedCount:3
+}}/>
+
+<Story name="non image selected" args={{
+  fileName:"something.mp4",
+  fileType:"mp4",
+  selected:true,
+  selectedCount:10
+}}/>
