@@ -15,6 +15,9 @@
   var isTall:boolean=false;
   var isLoading:boolean=true;
 
+  // image mode enabled if img src is filled out
+  var imageMode:boolean=!!imgSrc;
+
   // the img element ref
   var imageRef:HTMLImageElement;
 
@@ -44,8 +47,12 @@
 
 <div class="image-tile">
   <div class="img-contain">
-    <img src={imgSrc} on:load={h_imgLoad} alt="missing img" bind:this={imageRef}
-      class:wide-fit={isWide} class:tall-fit={isTall} class:loading={isLoading}/>
+    {#if imageMode}
+      <img src={imgSrc} on:load={h_imgLoad} alt="missing img" bind:this={imageRef}
+        class:wide-fit={isWide} class:tall-fit={isTall} class:loading={isLoading}/>
+    {:else}
+      <p>{fileType}</p>
+    {/if}
   </div>
   <div class="caption">
     {fileName}

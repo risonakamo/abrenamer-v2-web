@@ -25,3 +25,7 @@
 <Story name="square">
   <ImageTile imgSrc={Sqaure1} fileName="square1.png"/>
 </Story>
+
+<Story name="non image">
+  <ImageTile fileName="something.txt" fileType="txt"/>
+</Story>
