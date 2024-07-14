@@ -18,8 +18,6 @@
   var isWide:boolean=false;
   var isTall:boolean=false;
   var isLoading:boolean=true;
-
-  // image mode enabled if img src is filled out
   var imageMode:boolean=!!imgSrc;
 
   // the img element ref
@@ -42,6 +40,11 @@
     }
 
     isLoading=false;
+  }
+
+  // image mode changes based on img src
+  $: {
+    imageMode=!!imgSrc;
   }
 </script>
 
