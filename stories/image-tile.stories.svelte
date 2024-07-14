@@ -52,3 +52,9 @@
   selected:true,
   selectedCount:10
 }}/>
+
+<Story name="drag over 1" args={{
+  imgSrc:Wide1,
+  fileName:"wide1.jpeg",
+  dragOver:true
+}}/>

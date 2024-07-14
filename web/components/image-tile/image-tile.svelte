@@ -14,15 +14,31 @@
   export var selected:boolean=false;
   export var selectedCount:number=-1;
 
+  export var dragOver:boolean=false;
+
+
+  // --- state vars
   // controls which fit class appears
   var isWide:boolean=false;
   var isTall:boolean=false;
   var isLoading:boolean=true;
-  var imageMode:boolean=!!imgSrc;
 
   // the img element ref
   var imageRef:HTMLImageElement;
 
+
+  // --- derived
+  var imageMode:boolean;
+  var actualSelected:boolean;
+
+  // image mode changes based on img src
+  $: imageMode=!!imgSrc;
+
+  // drag over overrides selected state
+  $: actualSelected=selected && !dragOver;
+
+
+  // --- handlers
   /** on image loaded, detect if it is wide or tall. apply the correct fit class, and
    * reveal the image */
   function h_imgLoad():void
@@ -41,11 +57,6 @@
 
     isLoading=false;
   }
-
-  // image mode changes based on img src
-  $: {
-    imageMode=!!imgSrc;
-  }
 </script>
 
 <style lang="sass">
@@ -53,9 +64,13 @@
 </style>
 
 <div class="image-tile">
-  <div class="img-contain" class:selected={selected}>
-    <div class="selected-overlay">
+  <div class="img-contain" class:selected={actualSelected} class:drag-over={dragOver}>
+    <div class="selected-overlay overlay">
       <p>{selectedCount}</p>
+    </div>
+
+    <div class="drag-over-overlay overlay" class:enabled={dragOver}>
+      <p>{"->"}</p>
     </div>
 
     {#if imageMode}
