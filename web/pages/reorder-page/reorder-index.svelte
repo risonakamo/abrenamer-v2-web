@@ -18,6 +18,16 @@
       imgSrc="C:/Users/ktkm2/Desktop/newprojs/abrenamer-v2/Bananavarieties.jpg"
       fileType="jpg"
     />
+    <ImageTile
+      fileName="Bananavarieties.jpg"
+      imgSrc="C:/Users/ktkm2/Desktop/newprojs/abrenamer-v2/Bananavarieties.jpg"
+      fileType="jpg"
+    />
+    <ImageTile
+      fileName="Bananavarieties.jpg"
+      imgSrc="C:/Users/ktkm2/Desktop/newprojs/abrenamer-v2/Bananavarieties.jpg"
+      fileType="jpg"
+    />
   </div>
   <div class="status-bar">
 
