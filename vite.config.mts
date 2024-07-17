@@ -12,7 +12,9 @@ export default defineConfig({
     base:"",
 
     plugins:[
-        svelte(),
+        svelte({
+            configFile:`${__dirname}/svelte.config.js`
+        }),
         checker({
             typescript:true
         }),
@@ -34,7 +36,7 @@ export default defineConfig({
 
         rollupOptions:{
             input:{
-                "index":`${__dirname}/web/html/index.html`,
+                "reorder-page":`${__dirname}/web/html/reorder-page.html`,
             },
 
             onLog(level:LogLevel,log:RollupLog,handler:LogHandler):void

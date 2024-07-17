@@ -5,6 +5,7 @@
   "scripts": {
     "build": "vite build -w false",
     "watch": "vite build -w true",
+    "check": "svelte-check --threshold error",
     "sb": "storybook dev -p 6006"
   },
   "dependencies": {
