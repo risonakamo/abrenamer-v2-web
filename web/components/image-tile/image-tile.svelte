@@ -2,6 +2,12 @@
   /** a image tile representing an item to be renamed. item does not actually have to be
    *  an image */
 
+  import {createEventDispatcher} from "svelte";
+
+  const dispatch=createEventDispatcher<{
+    drop:void
+  }>();
+
   // --- props
   // image of the item
   export var imgSrc:string|undefined=undefined;
@@ -14,7 +20,7 @@
   export var selected:boolean=false;
   export var selectedCount:number=-1;
 
-  export var dragOver:boolean=false;
+
 
 
   // --- state vars
@@ -26,16 +32,24 @@
   // the img element ref
   var imageRef:HTMLImageElement;
 
+  // tracks drag enter/leaves. when above 0, actively being dragged over
+  var dragCounter:number=0;
+
 
   // --- derived
+  // display the image or not
   var imageMode:boolean;
   var actualSelected:boolean;
+  // when enabled, shows the drag over overlay
+  var dragOver:boolean=false;
 
   // image mode changes based on img src
   $: imageMode=!!imgSrc;
 
   // drag over overrides selected state
   $: actualSelected=selected && !dragOver;
+
+  $: dragOver=dragCounter>0;
 
 
   // --- handlers
@@ -57,13 +71,33 @@
 
     isLoading=false;
   }
+
+  /** on drag enter, inc drag counter */
+  function h_dragEnter():void
+  {
+    dragCounter++;
+  }
+
+  /** drag leave, dec drag counter */
+  function h_dragOut():void
+  {
+    dragCounter--;
+  }
+
+  /** dropped something on this tile. trigger drop event */
+  function h_drop():void
+  {
+    dispatch("drop");
+  }
 </script>
 
 <style lang="sass">
   @import "./image-tile.sass"
 </style>
 
-<div class="image-tile">
+<div class="image-tile" on:dragenter={h_dragEnter} on:dragleave={h_dragOut}
+  on:dragend={h_drop}
+>
   <div class="img-contain" class:selected={actualSelected} class:drag-over={dragOver}>
     <div class="selected-overlay overlay">
       <p>{selectedCount}</p>
