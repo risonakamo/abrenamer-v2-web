@@ -98,7 +98,9 @@
 <div class="image-tile" on:dragenter={h_dragEnter} on:dragleave={h_dragOut}
   on:dragend={h_drop} on:click
 >
-  <div class="img-contain" class:selected={actualSelected} class:drag-over={dragOver}>
+  <div class="img-contain" class:selected={actualSelected} class:drag-over={dragOver}
+    draggable
+  >
     <div class="selected-overlay overlay">
       <p>{selectedCount}</p>
     </div>
@@ -109,7 +111,9 @@
 
     {#if imageMode}
       <img src={imgSrc} on:load={h_imgLoad} alt="missing img" bind:this={imageRef}
-        class:wide-fit={isWide} class:tall-fit={isTall} class:loading={isLoading}/>
+        class:wide-fit={isWide} class:tall-fit={isTall} class:loading={isLoading}
+        class:selected={actualSelected}
+      />
     {:else}
       <p class="filetype">{fileType}</p>
     {/if}
