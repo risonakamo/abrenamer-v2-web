@@ -1,7 +1,68 @@
 <script lang="ts">
-    import ImageTile from "@/components/image-tile/image-tile.svelte";
+  import ImageTile from "@/components/image-tile/image-tile.svelte";
 
+  const initialFileItems:FileItemDataInitial[]=[
+    {
+      filepath:"C:/Users/ktkm2/Desktop/newprojs/abrenamer-v2/Bananavarieties.jpg",
+      isImage:true,
+      filename:"Bananavarieties.jpg",
+      filetype:"jpg",
+    },
+    {
+      filepath:"somewhere",
+      isImage:false,
+      filename:"something.txt",
+      filetype:"txt",
+    },
+    {
+      filepath:"C:/Users/ktkm2/Desktop/draw/ref/imgs/Annotation 2024-05-10 022025.png",
+      isImage:true,
+      filename:"Annotation 2024-05-10 022025.png",
+      filetype:"png",
+    }
+  ];
 
+  var fileItems:FileItemData[]=[];
+
+  // list of file names that are selected
+  var selected:Set<string>=new Set();
+
+  // render of file items array
+  $: {
+    fileItems=initialFileItems.map((item:FileItemDataInitial):FileItemData=>{
+      /** clicked on tile. toggle the item from selected */
+      function h_tileClick():void
+      {
+        if (selected.has(item.filepath))
+        {
+          selected.delete(item.filepath);
+        }
+
+        else
+        {
+          selected.add(item.filepath);
+        }
+
+        selected=selected;
+      }
+
+      // image path is set to the filepath if the item is an img
+      var imagePath:string|undefined=undefined;
+
+      if (item.isImage)
+      {
+        imagePath=item.filepath;
+      }
+
+      return {
+        ...item,
+        imagePath,
+        selected:selected.has(item.filepath),
+        selectedCount:10,
+        onClick:h_tileClick
+      };
+    });
+  }
 </script>
 
 <style lang="sass">
@@ -13,21 +74,10 @@
 
   </div>
   <div class="tiles">
-    <ImageTile
-      fileName="Bananavarieties.jpg"
-      imgSrc="C:/Users/ktkm2/Desktop/newprojs/abrenamer-v2/Bananavarieties.jpg"
-      fileType="jpg"
-    />
-    <ImageTile
-      fileName="Bananavarieties.jpg"
-      imgSrc="C:/Users/ktkm2/Desktop/newprojs/abrenamer-v2/Bananavarieties.jpg"
-      fileType="jpg"
-    />
-    <ImageTile
-      fileName="Bananavarieties.jpg"
-      imgSrc="C:/Users/ktkm2/Desktop/newprojs/abrenamer-v2/Bananavarieties.jpg"
-      fileType="jpg"
-    />
+    {#each fileItems as item (item.filepath)}
+      <ImageTile imgSrc={item.imagePath} fileName={item.filename}
+        fileType={item.filetype} selected={item.selected} on:click={item.onClick}/>
+    {/each}
   </div>
   <div class="status-bar">
 
