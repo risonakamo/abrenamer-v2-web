@@ -107,8 +107,14 @@
 
 <main on:drop={h_testdrop} on:dragover|preventDefault>
   <div class="top-zone">
+    <div class="drag-handler-zone">
 
+    </div>
+    <div class="new-group-drop-zone-zone">
+
+    </div>
   </div>
+
   <div class="tiles">
     {#each fileItems as item (item.filepath)}
       <ImageTile imgSrc={item.imagePath} fileName={item.filename}
@@ -116,6 +122,7 @@
         selectedCount={item.selectedCount}/>
     {/each}
   </div>
+
   <div class="status-bar">
 
   </div>

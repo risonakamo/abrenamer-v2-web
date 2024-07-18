@@ -1,0 +1,39 @@
+.new-group-drop-zone
+    --normal-border-colour: #ffffff66
+
+    font-family: roboto
+    color: white
+    width: 225px
+    height: 80px
+    border: 2px dashed var(--normal-border-colour)
+    border-radius: 5px
+    display: flex
+    align-items: center
+    justify-content: center
+    cursor: pointer
+    user-select: none
+    box-sizing: border-box
+
+    &:hover
+        border-color: #ffffffb0
+
+    &:active
+        border-style: solid
+        border-color: #ffffffd6
+
+    &.no-items-disabled
+        border-style: solid
+        border-width: 1px
+        cursor: not-allowed
+
+        p
+            opacity: .6
+
+        &:hover
+            border-color: var(--normal-border-colour)
+
+    &.drag-over
+        border-style: dotted
+        border-color: #6cc30d
+        border-width: 3px
+        background: #92b14633
