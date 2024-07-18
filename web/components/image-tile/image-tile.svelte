@@ -3,6 +3,7 @@
    *  an image */
 
   import {createEventDispatcher} from "svelte";
+  import {draggable} from "@neodrag/svelte";
 
   const dispatch=createEventDispatcher<{
     drop:void
@@ -98,9 +99,7 @@
 <div class="image-tile" on:dragenter={h_dragEnter} on:dragleave={h_dragOut}
   on:dragend={h_drop} on:click
 >
-  <div class="img-contain" class:selected={actualSelected} class:drag-over={dragOver}
-    draggable
-  >
+  <div class="img-contain" class:selected={actualSelected} class:drag-over={dragOver}>
     <div class="selected-overlay overlay">
       <p>{selectedCount}</p>
     </div>
