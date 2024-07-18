@@ -1,7 +1,7 @@
 // types for reorder page
 
-/** represents a tracked item */
-interface FileItemDataInitial
+/** data of a file item */
+interface FileItemData
 {
     // full filepath
     filepath:string
@@ -12,8 +12,8 @@ interface FileItemDataInitial
     filetype:string
 }
 
-/** tracked item extended */
-interface FileItemData extends FileItemDataInitial
+/** file item for rendering */
+interface RenderedFileItem extends FileItemData
 {
     selected:boolean
     selectedCount:number

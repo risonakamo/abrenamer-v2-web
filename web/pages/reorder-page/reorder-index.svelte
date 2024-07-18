@@ -1,7 +1,7 @@
 <script lang="ts">
   import ImageTile from "@/components/image-tile/image-tile.svelte";
 
-  const initialFileItems:FileItemDataInitial[]=[
+  const fileItemsData:FileItemData[]=[
     {
       filepath:"C:/Users/ktkm2/Desktop/newprojs/abrenamer-v2/Bananavarieties.jpg",
       isImage:true,
@@ -22,28 +22,28 @@
     }
   ];
 
-  var fileItems:FileItemData[]=[];
+  var fileItems:RenderedFileItem[]=[];
 
   // list of file names that are selected
-  var selected:Set<string>=new Set();
+  var selectedFileItems:Set<string>=new Set();
 
   // render of file items array
   $: {
-    fileItems=initialFileItems.map((item:FileItemDataInitial):FileItemData=>{
+    fileItems=fileItemsData.map((item:FileItemData):RenderedFileItem=>{
       /** clicked on tile. toggle the item from selected */
       function h_tileClick():void
       {
-        if (selected.has(item.filepath))
+        if (selectedFileItems.has(item.filepath))
         {
-          selected.delete(item.filepath);
+          selectedFileItems.delete(item.filepath);
         }
 
         else
         {
-          selected.add(item.filepath);
+          selectedFileItems.add(item.filepath);
         }
 
-        selected=selected;
+        selectedFileItems=selectedFileItems;
       }
 
       // image path is set to the filepath if the item is an img
@@ -57,7 +57,7 @@
       return {
         ...item,
         imagePath,
-        selected:selected.has(item.filepath),
+        selected:selectedFileItems.has(item.filepath),
         selectedCount:10,
         onClick:h_tileClick
       };
