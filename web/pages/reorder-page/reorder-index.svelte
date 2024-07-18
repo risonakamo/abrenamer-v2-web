@@ -56,6 +56,14 @@
   }
 
 
+  // --- handlers
+  function h_testdrop(e:DragEvent):void
+  {
+    e.preventDefault();
+    console.log("dropped",e.dataTransfer?.files);
+  }
+
+
 
 
   // --- reactives
@@ -97,7 +105,7 @@
   @import "./reorder-index.sass"
 </style>
 
-<main>
+<main on:drop={h_testdrop} on:dragover|preventDefault>
   <div class="top-zone">
 
   </div>
