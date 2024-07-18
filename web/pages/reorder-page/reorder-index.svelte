@@ -1,6 +1,7 @@
 <script lang="ts">
   import ImageTile from "@/components/image-tile/image-tile.svelte";
 
+  // --- consts
   const fileItemsData:FileItemData[]=[
     {
       filepath:"C:/Users/ktkm2/Desktop/newprojs/abrenamer-v2/Bananavarieties.jpg",
@@ -22,28 +23,49 @@
     }
   ];
 
+
+
+  // --- states
+  // the rendered file items
   var fileItems:RenderedFileItem[]=[];
 
-  // list of file names that are selected
-  var selectedFileItems:Set<string>=new Set();
+  // names of selected files, in selection order
+  var selectedFileItemsOrdered:string[]=[];
 
-  // render of file items array
+
+
+  // --- state control
+  /** toggle selected state of a target filepath. removes or adds to selected items array*/
+  function toggleSelectedItem(filepath:string):void
+  {
+    const foundI:number=selectedFileItemsOrdered.findIndex((item:string):boolean=>{
+      return item==filepath;
+    });
+
+    if (foundI>=0)
+    {
+      selectedFileItemsOrdered.splice(foundI,1);
+    }
+
+    else
+    {
+      selectedFileItemsOrdered.push(filepath);
+    }
+
+    selectedFileItemsOrdered=selectedFileItemsOrdered;
+  }
+
+
+
+
+  // --- reactives
+  // render of file items array when files item changes or selected items changes.
   $: {
     fileItems=fileItemsData.map((item:FileItemData):RenderedFileItem=>{
       /** clicked on tile. toggle the item from selected */
       function h_tileClick():void
       {
-        if (selectedFileItems.has(item.filepath))
-        {
-          selectedFileItems.delete(item.filepath);
-        }
-
-        else
-        {
-          selectedFileItems.add(item.filepath);
-        }
-
-        selectedFileItems=selectedFileItems;
+        toggleSelectedItem(item.filepath);
       }
 
       // image path is set to the filepath if the item is an img
@@ -54,11 +76,17 @@
         imagePath=item.filepath;
       }
 
+      const selectedItemIndex:number=selectedFileItemsOrdered.findIndex((selectedItem:string):boolean=>{
+        return selectedItem==item.filepath;
+      });
+
+      const selected:boolean=selectedItemIndex>=0;
+
       return {
         ...item,
         imagePath,
-        selected:selectedFileItems.has(item.filepath),
-        selectedCount:10,
+        selected,
+        selectedCount:selectedItemIndex+1,
         onClick:h_tileClick
       };
     });
@@ -76,7 +104,8 @@
   <div class="tiles">
     {#each fileItems as item (item.filepath)}
       <ImageTile imgSrc={item.imagePath} fileName={item.filename}
-        fileType={item.filetype} selected={item.selected} on:click={item.onClick}/>
+        fileType={item.filetype} selected={item.selected} on:click={item.onClick}
+        selectedCount={item.selectedCount}/>
     {/each}
   </div>
   <div class="status-bar">
