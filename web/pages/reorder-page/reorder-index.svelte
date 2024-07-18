@@ -1,5 +1,6 @@
 <script lang="ts">
   import ImageTile from "@/components/image-tile/image-tile.svelte";
+  import NewGroupDropZone from "@/components/new-group-drop-zone/new-group-drop-zone.svelte";
 
   // --- consts
   const fileItemsData:FileItemData[]=[
@@ -57,11 +58,8 @@
 
 
   // --- handlers
-  function h_testdrop(e:DragEvent):void
-  {
-    e.preventDefault();
-    console.log("dropped",e.dataTransfer?.files);
-  }
+
+
 
 
 
@@ -105,13 +103,13 @@
   @import "./reorder-index.sass"
 </style>
 
-<main on:drop={h_testdrop} on:dragover|preventDefault>
+<main>
   <div class="top-zone">
     <div class="drag-handler-zone">
 
     </div>
     <div class="new-group-drop-zone-zone">
-
+      <NewGroupDropZone/>
     </div>
   </div>
 
