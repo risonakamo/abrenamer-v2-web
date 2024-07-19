@@ -2,36 +2,48 @@
   import ImageTile from "@/components/image-tile/image-tile.svelte";
   import NewGroupDropZone from "@/components/new-group-drop-zone/new-group-drop-zone.svelte";
 
-  // --- consts
-  const fileItemsData:FileItemData[]=[
-    {
+  // --- states
+  // all file items data in no particular order
+  var fileItemsData:FileItemDataDict={
+    "C:/Users/ktkm2/Desktop/newprojs/abrenamer-v2/Bananavarieties.jpg":{
       filepath:"C:/Users/ktkm2/Desktop/newprojs/abrenamer-v2/Bananavarieties.jpg",
       isImage:true,
       filename:"Bananavarieties.jpg",
       filetype:"jpg",
     },
-    {
+    "somewhere":{
       filepath:"somewhere",
       isImage:false,
       filename:"something.txt",
       filetype:"txt",
     },
-    {
+    "C:/Users/ktkm2/Desktop/draw/ref/imgs/Annotation 2024-05-10 022025.png":{
       filepath:"C:/Users/ktkm2/Desktop/draw/ref/imgs/Annotation 2024-05-10 022025.png",
       isImage:true,
       filename:"Annotation 2024-05-10 022025.png",
       filetype:"png",
     }
-  ];
+  };
 
-
-
-  // --- states
-  // the rendered file items
-  var fileItems:RenderedFileItem[]=[];
-
-  // names of selected files, in selection order
+  // selected files, in selection order. uses filepath as key
   var selectedFileItemsOrdered:string[]=[];
+
+  // ordering of the items. uses filepath as key
+  var fileGroups:FileItemGroup[]=[
+    {
+      name:"",
+      items:[
+        "C:/Users/ktkm2/Desktop/newprojs/abrenamer-v2/Bananavarieties.jpg",
+        "C:/Users/ktkm2/Desktop/draw/ref/imgs/Annotation 2024-05-10 022025.png",
+      ]
+    },
+    {
+      name:"",
+      items:[
+        "somewhere"
+      ]
+    }
+  ];
 
 
 
@@ -64,36 +76,44 @@
 
 
 
-  // --- reactives
-  // render of file items array when files item changes or selected items changes.
+  // --- derived
+  // construct the rendered file groups which contains the rendered file items
+  var renderedFileGroups:RenderedFileGroup[]=[];
   $: {
-    fileItems=fileItemsData.map((item:FileItemData):RenderedFileItem=>{
-      /** clicked on tile. toggle the item from selected */
-      function h_tileClick():void
-      {
-        toggleSelectedItem(item.filepath);
-      }
-
-      // image path is set to the filepath if the item is an img
-      var imagePath:string|undefined=undefined;
-
-      if (item.isImage)
-      {
-        imagePath=item.filepath;
-      }
-
-      const selectedItemIndex:number=selectedFileItemsOrdered.findIndex((selectedItem:string):boolean=>{
-        return selectedItem==item.filepath;
-      });
-
-      const selected:boolean=selectedItemIndex>=0;
-
+    renderedFileGroups=fileGroups.map((filegroup:FileItemGroup):RenderedFileGroup=>{
       return {
-        ...item,
-        imagePath,
-        selected,
-        selectedCount:selectedItemIndex+1,
-        onClick:h_tileClick
+        name:filegroup.name,
+        items:filegroup.items.map((filepath:string):RenderedFileItem=>{
+          const item:FileItemData=fileItemsData[filepath];
+
+          /** clicked on tile. toggle the item from selected */
+          function h_tileClick():void
+          {
+            toggleSelectedItem(item.filepath);
+          }
+
+          // image path is set to the filepath if the item is an img
+          var imagePath:string|undefined=undefined;
+
+          if (item.isImage)
+          {
+            imagePath=item.filepath;
+          }
+
+          const selectedItemIndex:number=selectedFileItemsOrdered.findIndex((selectedItem:string):boolean=>{
+            return selectedItem==item.filepath;
+          });
+
+          const selected:boolean=selectedItemIndex>=0;
+
+          return {
+            ...item,
+            imagePath,
+            selected,
+            selectedCount:selectedItemIndex+1,
+            onClick:h_tileClick
+          };
+        })
       };
     });
   }
@@ -114,10 +134,15 @@
   </div>
 
   <div class="tiles">
-    {#each fileItems as item (item.filepath)}
-      <ImageTile imgSrc={item.imagePath} fileName={item.filename}
-        fileType={item.filetype} selected={item.selected} on:click={item.onClick}
-        selectedCount={item.selectedCount}/>
+    {#each renderedFileGroups as filegroup}
+      <div class="file-group">
+      {#each filegroup.items as item (item.filepath)}
+        <ImageTile imgSrc={item.imagePath} fileName={item.filename}
+          fileType={item.filetype} selected={item.selected} on:click={item.onClick}
+          selectedCount={item.selectedCount}
+        />
+      {/each}
+      </div>
     {/each}
   </div>
 
