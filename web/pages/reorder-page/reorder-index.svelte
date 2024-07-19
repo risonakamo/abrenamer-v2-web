@@ -1,6 +1,7 @@
 <script lang="ts">
   import ImageTile from "@/components/image-tile/image-tile.svelte";
   import NewGroupDropZone from "@/components/new-group-drop-zone/new-group-drop-zone.svelte";
+  import FileItemGroupContainer from "@/components/file-item-group-container/file-item-group-container.svelte";
 
   // --- states
   // all file items data in no particular order
@@ -42,6 +43,10 @@
       items:[
         "somewhere"
       ]
+    },
+    {
+      name:"",
+      items:[]
     }
   ];
 
@@ -80,9 +85,11 @@
   // construct the rendered file groups which contains the rendered file items
   var renderedFileGroups:RenderedFileGroup[]=[];
   $: {
+    let count:number=0;
     renderedFileGroups=fileGroups.map((filegroup:FileItemGroup):RenderedFileGroup=>{
+      count++;
       return {
-        name:filegroup.name,
+        name:`#${count}`,
         items:filegroup.items.map((filepath:string):RenderedFileItem=>{
           const item:FileItemData=fileItemsData[filepath];
 
@@ -135,14 +142,14 @@
 
   <div class="tiles">
     {#each renderedFileGroups as filegroup}
-      <div class="file-group">
+      <FileItemGroupContainer title={filegroup.name} numItems={filegroup.items.length}>
       {#each filegroup.items as item (item.filepath)}
         <ImageTile imgSrc={item.imagePath} fileName={item.filename}
           fileType={item.filetype} selected={item.selected} on:click={item.onClick}
           selectedCount={item.selectedCount}
         />
       {/each}
-      </div>
+      </FileItemGroupContainer>
     {/each}
   </div>
 
