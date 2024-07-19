@@ -2,6 +2,7 @@
   import ImageTile from "@/components/image-tile/image-tile.svelte";
   import NewGroupDropZone from "@/components/new-group-drop-zone/new-group-drop-zone.svelte";
   import FileItemGroupContainer from "@/components/file-item-group-container/file-item-group-container.svelte";
+  import {moveItemsAfter} from "@/lib/file-group";
 
   // --- states
   // all file items data in no particular order
@@ -50,6 +51,9 @@
     }
   ];
 
+  // item currently being dragged
+  var draggedItem:FileItemData|undefined=undefined;
+
 
 
   // --- state control
@@ -72,6 +76,8 @@
 
     selectedFileItemsOrdered=selectedFileItemsOrdered;
   }
+
+
 
 
   // --- handlers
@@ -99,6 +105,29 @@
             toggleSelectedItem(item.filepath);
           }
 
+          /** drag start. set the dragged item */
+          function h_tileDragStart():void
+          {
+            draggedItem=item;
+          }
+
+          /** dropped on a tile. if there is a dragged item, perform move items after
+           *  using the dragged item as the move target, and the dropped item as the
+           *  drop item */
+          function h_tileDrop():void
+          {
+            if (!draggedItem)
+            {
+              return;
+            }
+
+            fileGroups=moveItemsAfter(
+              fileGroups,
+              [draggedItem.filepath],
+              item.filepath
+            );
+          }
+
           // image path is set to the filepath if the item is an img
           var imagePath:string|undefined=undefined;
 
@@ -118,7 +147,9 @@
             imagePath,
             selected,
             selectedCount:selectedItemIndex+1,
-            onClick:h_tileClick
+            onClick:h_tileClick,
+            onDragStart:h_tileDragStart,
+            onDrop:h_tileDrop
           };
         })
       };
@@ -146,7 +177,8 @@
       {#each filegroup.items as item (item.filepath)}
         <ImageTile imgSrc={item.imagePath} fileName={item.filename}
           fileType={item.filetype} selected={item.selected} on:click={item.onClick}
-          selectedCount={item.selectedCount}
+          selectedCount={item.selectedCount} on:dragstart={item.onDragStart}
+          on:drop={item.onDrop}
         />
       {/each}
       </FileItemGroupContainer>

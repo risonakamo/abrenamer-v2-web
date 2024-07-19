@@ -27,6 +27,8 @@ interface RenderedFileItem extends FileItemData
     imagePath:string|undefined
 
     onClick():void
+    onDragStart():void
+    onDrop():void
 }
 
 /** group of file items */
