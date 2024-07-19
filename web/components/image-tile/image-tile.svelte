@@ -99,7 +99,9 @@
 <div class="image-tile" on:dragenter={h_dragEnter} on:dragleave={h_dragOut}
   on:dragend={h_drop} on:click
 >
-  <div class="img-contain" class:selected={actualSelected} class:drag-over={dragOver}>
+  <div class="img-contain" class:selected={actualSelected} class:drag-over={dragOver}
+    draggable={true}
+  >
     <div class="selected-overlay overlay">
       <p>{selectedCount}</p>
     </div>
@@ -114,7 +116,7 @@
         class:selected={actualSelected}
       />
     {:else}
-      <p class="filetype">{fileType}</p>
+      <p class="filetype" class:selected={actualSelected}>{fileType}</p>
     {/if}
   </div>
   <div class="caption">
