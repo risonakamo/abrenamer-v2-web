@@ -124,7 +124,8 @@
         fileGroups=moveItemsAfter(
           fileGroups,
           selectedFileItemsOrdered,
-          dropTarget
+          dropTarget,
+          false
         );
 
         selectedFileItemsOrdered=[];
@@ -136,7 +137,8 @@
         fileGroups=moveItemsAfter(
           fileGroups,
           [draggedItem.filepath],
-          dropTarget
+          dropTarget,
+          false
         );
       }
     }

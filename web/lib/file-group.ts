@@ -7,6 +7,8 @@ import _ from "lodash";
  *  from all groups. if any move item did not exist, doesn't care, so watch out
  *  for this.
  *
+ *  give "before item" to place before the target item instead.
+ *
  *  if the drop item is one of the move items, places all move items after the item
  *  immediately before the targetted drop item (first item before the drop item that
  *  is not one of the move items). if there are no immediate items, places it at the
@@ -16,7 +18,8 @@ import _ from "lodash";
 export function moveItemsAfter(
     groups:FileItemGroup[],
     moveItems:string[],
-    dropItem:string
+    dropItem:string,
+    beforeItem:boolean,
 ):FileItemGroup[]
 {
     const moveItemsSet:Set<string>=new Set(moveItems);
@@ -98,7 +101,13 @@ export function moveItemsAfter(
         return groups;
     }
 
-    newDropGroup.items.splice(actualDropIndex+1,0,...moveItems);
+    // increment by 1 to place after the drop index. without increment, places before
+    if (!beforeItem)
+    {
+        actualDropIndex+=1;
+    }
+
+    newDropGroup.items.splice(actualDropIndex,0,...moveItems);
 
     return newGroups;
 }
