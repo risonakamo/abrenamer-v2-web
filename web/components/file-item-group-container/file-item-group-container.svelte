@@ -1,13 +1,14 @@
 <script lang="ts">
+  import {createEventDispatcher} from "svelte";
+
+  const dispatch=createEventDispatcher<{
+    drop:void
+  }>();
+
   export var title:string="";
   export var numItems:number=0;
 
-
-
-
   var dragCount:number=0;
-
-
 
   function h_dragEnter():void
   {
@@ -22,9 +23,8 @@
   function h_dragend():void
   {
     dragCount=0;
+    dispatch("drop");
   }
-
-
 
   var draggedOver:boolean=false;
   $: draggedOver=dragCount>0;

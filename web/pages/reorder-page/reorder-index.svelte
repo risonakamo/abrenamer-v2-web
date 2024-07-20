@@ -79,6 +79,78 @@
     selectedFileItemsOrdered=selectedFileItemsOrdered;
   }
 
+  /** move dragged items or selected items to a target.
+   *  - drop target: filepath of the item to drop things on. items to be moved will
+   *    be placed after this target
+   *  - drop group index: index of group to drop items into, as alternative to
+   *    drop target. only one of these args can be used at a time.
+   *  - if no dragged item, do nothing for now. eventually should detect payload
+   *    to perform drop actions
+   *  - check if the dragged item is one of the selected. if it is, then move
+   *    all selected items to the drop target
+   *      - otherwise, only moves the item being dragged
+   *  - if the drop target is a group, the drop target will be empty, and a
+   *    group index will be provided instead. the drop target will be set as the last item
+   *    in the group
+   *  - if move front is set, and the drop target is not defined, will place it at
+   *    the beginning of the group
+   *  - as such, either the drop target or drop group index must be set, but only
+   *    one will be used */
+  function moveDraggeditems(
+    dropTarget:string|null,
+    dropGroupIndex:number|null
+  ):void
+  {
+    if (draggedItem==undefined)
+    {
+      console.warn("no dragged item");
+      return;
+    }
+
+    // move to single drop target mode
+    if (dropTarget!=null)
+    {
+      // check if the item being dragged is one of the selected items
+      const dragItemIsSelected:boolean=_.some(
+        selectedFileItemsOrdered,
+        (item:string):boolean=>{
+          return item==draggedItem?.filepath;
+        }
+      );
+
+      // if it is, move all selected items to the drop point
+      if (dragItemIsSelected)
+      {
+        fileGroups=moveItemsAfter(
+          fileGroups,
+          selectedFileItemsOrdered,
+          dropTarget
+        );
+
+        selectedFileItemsOrdered=[];
+      }
+
+      // otherwise, just move the single item that is being dragged
+      else
+      {
+        fileGroups=moveItemsAfter(
+          fileGroups,
+          [draggedItem.filepath],
+          dropTarget
+        );
+      }
+    }
+
+    else if (dropGroupIndex!=null)
+    {
+
+    }
+
+    else
+    {
+      console.error("did not provide drop target or drop group");
+    }
+  }
 
 
 
@@ -96,6 +168,13 @@
     let count:number=0;
     renderedFileGroups=_.map(fileGroups,(filegroup:FileItemGroup):RenderedFileGroup=>{
       count++;
+
+      /** dropped in group */
+      function h_groupDrop():void
+      {
+
+      }
+
       return {
         name:`#${count}`,
         items:_.map(filegroup.items,(filepath:string):RenderedFileItem=>{
@@ -113,46 +192,14 @@
             draggedItem=item;
           }
 
-          /** dropped on a tile.
-           *  1. if there are multiple selected items, and the item being dragged is one of
-           *     those selected items. move all selected items to the dropped tile. then,
-           *     clear the selected items.
-           *  2. if the dragged item is not selected, only move the dragged item
-           *  3. if no dragged item, then the drag came from outside. do nothing for now */
+          /** dropped on a tile. use the move dragged items, giving the tile that was
+           *  just dropped on as the drop target */
           function h_tileDrop():void
           {
-            if (draggedItem==undefined)
-            {
-              console.warn("no dragged item");
-              return;
-            }
-
-            // check if the item being dragged is one of the selected items
-            const dragItemIsSelected:boolean=_.some(selectedFileItemsOrdered,(item:string):boolean=>{
-              return item==draggedItem?.filepath;
-            });
-
-            // if it is, move all selected items to the drop point
-            if (dragItemIsSelected)
-            {
-              fileGroups=moveItemsAfter(
-                fileGroups,
-                selectedFileItemsOrdered,
-                item.filepath
-              );
-
-              selectedFileItemsOrdered=[];
-            }
-
-            // otherwise, just move the single item that is being dragged
-            else
-            {
-              fileGroups=moveItemsAfter(
-                fileGroups,
-                [draggedItem.filepath],
-                item.filepath
-              );
-            }
+            moveDraggeditems(
+              item.filepath,
+              null
+            );
           }
 
           // image path is set to the filepath if the item is an img
