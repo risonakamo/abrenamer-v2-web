@@ -73,14 +73,16 @@
   }
 
   /** on drag enter, inc drag counter */
-  function h_dragEnter():void
+  function h_dragEnter(e:DragEvent):void
   {
+    e.stopPropagation();
     dragCounter++;
   }
 
   /** drag leave, dec drag counter */
-  function h_dragOut():void
+  function h_dragOut(e:DragEvent):void
   {
+    e.stopPropagation();
     dragCounter--;
   }
 
