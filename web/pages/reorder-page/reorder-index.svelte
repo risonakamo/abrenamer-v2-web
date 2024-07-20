@@ -111,21 +111,47 @@
             draggedItem=item;
           }
 
-          /** dropped on a tile. if there is a dragged item, perform move items after
-           *  using the dragged item as the move target, and the dropped item as the
-           *  drop item */
+          /** dropped on a tile.
+           *  1. if there are multiple selected items, and the item being dragged is one of
+           *     those selected items. move all selected items to the dropped tile. then,
+           *     clear the selected items.
+           *  2. if the dragged item is not selected, only move the dragged item
+           *  3. if no dragged item, then the drag came from outside. do nothing for now */
           function h_tileDrop():void
           {
-            if (!draggedItem)
+            if (draggedItem==undefined)
             {
+              console.warn("no dragged item");
               return;
             }
 
-            fileGroups=moveItemsAfter(
-              fileGroups,
-              [draggedItem.filepath],
-              item.filepath
-            );
+            // check if the item being dragged is one of the selected items
+            const dragItemIsSelected:boolean=selectedFileItemsOrdered
+            .findIndex((item:string):boolean=>{
+              return item==draggedItem?.filepath;
+            })>=0;
+
+            // if it is, move all selected items to the drop point
+            if (dragItemIsSelected)
+            {
+              fileGroups=moveItemsAfter(
+                fileGroups,
+                selectedFileItemsOrdered,
+                item.filepath
+              );
+
+              selectedFileItemsOrdered=[];
+            }
+
+            // otherwise, just move the single item that is being dragged
+            else
+            {
+              fileGroups=moveItemsAfter(
+                fileGroups,
+                [draggedItem.filepath],
+                item.filepath
+              );
+            }
           }
 
           // image path is set to the filepath if the item is an img
