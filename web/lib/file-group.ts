@@ -1,5 +1,7 @@
 // funcs to work file FileItemGroup lists
 
+import _ from "lodash";
+
 /** places all target items after the drop item, in the
  *  order it was specified in move items. removes all other instances of move items
  *  from all groups. if any move item did not exist, doesn't care, so watch out
@@ -20,8 +22,8 @@ export function moveItemsAfter(
     const moveItemsSet:Set<string>=new Set(moveItems);
 
     // locate the group the drop item is present in
-    const dropItemGroupI:number=groups.findIndex((group:FileItemGroup):boolean=>{
-        return !!group.items.find((item:string):boolean=>{
+    const dropItemGroupI:number=_.findIndex(groups,(group:FileItemGroup):boolean=>{
+        return _.some(group.items,(item:string):boolean=>{
             return item==dropItem;
         });
     });
@@ -65,12 +67,12 @@ export function moveItemsAfter(
     }
 
     // from all groups, purge all the target move items
-    const newGroups:FileItemGroup[]=groups.map((group:FileItemGroup):FileItemGroup=>{
+    const newGroups:FileItemGroup[]=_.map(groups,(group:FileItemGroup):FileItemGroup=>{
         return {
             name:group.name,
-            // filter to items that are NOT in the move items
-            items:group.items.filter((item:string):boolean=>{
-                return !moveItemsSet.has(item);
+            // reject items that are in the move items set
+            items:_.reject(group.items,(item:string):boolean=>{
+                return moveItemsSet.has(item);
             })
         };
     });
@@ -84,7 +86,7 @@ export function moveItemsAfter(
     var actualDropIndex:number=0;
     if (actualDropItem)
     {
-        actualDropIndex=newDropGroup.items.findIndex((item:string):boolean=>{
+        actualDropIndex=_.findIndex(newDropGroup.items,(item:string):boolean=>{
             return item==actualDropItem;
         });
     }

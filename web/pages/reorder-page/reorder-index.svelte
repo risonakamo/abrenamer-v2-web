@@ -1,4 +1,6 @@
 <script lang="ts">
+  import _ from "lodash";
+
   import ImageTile from "@/components/image-tile/image-tile.svelte";
   import NewGroupDropZone from "@/components/new-group-drop-zone/new-group-drop-zone.svelte";
   import FileItemGroupContainer from "@/components/file-item-group-container/file-item-group-container.svelte";
@@ -60,7 +62,7 @@
   /** toggle selected state of a target filepath. removes or adds to selected items array*/
   function toggleSelectedItem(filepath:string):void
   {
-    const foundI:number=selectedFileItemsOrdered.findIndex((item:string):boolean=>{
+    const foundI:number=_.findIndex(selectedFileItemsOrdered,(item:string):boolean=>{
       return item==filepath;
     });
 
@@ -92,11 +94,11 @@
   var renderedFileGroups:RenderedFileGroup[]=[];
   $: {
     let count:number=0;
-    renderedFileGroups=fileGroups.map((filegroup:FileItemGroup):RenderedFileGroup=>{
+    renderedFileGroups=_.map(fileGroups,(filegroup:FileItemGroup):RenderedFileGroup=>{
       count++;
       return {
         name:`#${count}`,
-        items:filegroup.items.map((filepath:string):RenderedFileItem=>{
+        items:_.map(filegroup.items,(filepath:string):RenderedFileItem=>{
           const item:FileItemData=fileItemsData[filepath];
 
           /** clicked on tile. toggle the item from selected */
@@ -126,10 +128,9 @@
             }
 
             // check if the item being dragged is one of the selected items
-            const dragItemIsSelected:boolean=selectedFileItemsOrdered
-            .findIndex((item:string):boolean=>{
+            const dragItemIsSelected:boolean=_.some(selectedFileItemsOrdered,(item:string):boolean=>{
               return item==draggedItem?.filepath;
-            })>=0;
+            });
 
             // if it is, move all selected items to the drop point
             if (dragItemIsSelected)
