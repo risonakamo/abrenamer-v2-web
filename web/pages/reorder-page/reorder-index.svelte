@@ -92,13 +92,14 @@
    *  - if the drop target is a group, the drop target will be empty, and a
    *    group index will be provided instead. the drop target will be set as the last item
    *    in the group
-   *  - if move front is set, and the drop target is not defined, will place it at
-   *    the beginning of the group
+   *  - if frontOfGroup is set, and the drop target is not defined, will place it at
+   *    the beginning of the group. does not do anything with dropTarget mode
    *  - as such, either the drop target or drop group index must be set, but only
    *    one will be used */
   function moveDraggeditems(
     dropTarget:string|null,
-    dropGroupIndex:number|null
+    dropGroupIndex:number|null,
+    frontOfGroup:boolean
   ):void
   {
     if (draggedItem==undefined)
@@ -107,17 +108,17 @@
       return;
     }
 
+    // check if the item being dragged is one of the selected items
+    const dragItemIsSelected:boolean=_.some(
+      selectedFileItemsOrdered,
+      (item:string):boolean=>{
+        return item==draggedItem?.filepath;
+      }
+    );
+
     // move to single drop target mode
     if (dropTarget!=null)
     {
-      // check if the item being dragged is one of the selected items
-      const dragItemIsSelected:boolean=_.some(
-        selectedFileItemsOrdered,
-        (item:string):boolean=>{
-          return item==draggedItem?.filepath;
-        }
-      );
-
       // if it is, move all selected items to the drop point
       if (dragItemIsSelected)
       {
@@ -145,7 +146,70 @@
 
     else if (dropGroupIndex!=null)
     {
+      const targetFileGroup:FileItemGroup=fileGroups[dropGroupIndex];
 
+      // if the target group is empty
+      if (!targetFileGroup.items.length)
+      {
+        // item is selected. move all the selected items into the group
+        if (dragItemIsSelected)
+        {
+          targetFileGroup.items.push(...selectedFileItemsOrdered);
+        }
+
+        // item was not selected. push the single dragged item
+        else
+        {
+          targetFileGroup.items.push(draggedItem.filepath);
+        }
+
+        fileGroups=fileGroups;
+      }
+
+      // target group is not empty. need to target the last item or 1st item in the group
+      else
+      {
+        var groupDropItem:string|undefined;
+
+        // determine items to move. either all the selected items if the item being dragged is selected,
+        // or just the one dragged item
+        var itemsToMove:string[]=[];
+
+        if (dragItemIsSelected)
+        {
+          itemsToMove=selectedFileItemsOrdered;
+        }
+
+        else
+        {
+          itemsToMove=[draggedItem.filepath];
+        }
+
+        // back of group mode
+        if (!frontOfGroup)
+        {
+          groupDropItem=_.last(targetFileGroup.items);
+
+          if (!groupDropItem)
+          {
+            console.error("unable to get last group item");
+            return;
+          }
+        }
+
+        // front of group mode
+        else
+        {
+          groupDropItem=targetFileGroup.items[0];
+        }
+
+        fileGroups=moveItemsAfter(
+          fileGroups,
+          itemsToMove,
+          groupDropItem,
+          false,
+        );
+      }
     }
 
     else
@@ -200,7 +264,8 @@
           {
             moveDraggeditems(
               item.filepath,
-              null
+              null,
+              false
             );
           }
 
