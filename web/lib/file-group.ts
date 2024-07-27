@@ -44,7 +44,8 @@ export function moveItemsAfter(
 
     // the drop item is one of the move items. go through the drop item group to determine
     // the first item before the drop item that is NOT one of the move items.
-    // if fail to find, then will just have to insert at the front of the group
+    // if fail to find, then will just have to insert at the front of the group.
+    // fail to find triggers immediately upon finding another selected item
     if (moveItemsSet.has(dropItem))
     {
         actualDropItem=undefined;
@@ -53,18 +54,18 @@ export function moveItemsAfter(
         {
             const item:string=dropItemGroup.items[itemI];
 
-            // the item is the drop item, quit search
-            if (item==dropItem)
-            {
-                continue;
-            }
-
             // the item is an item that is not one of the move items. set it as
-            // a potential actual drop item, but need to keep going until find the
-            // drop item
+            // a potential actual drop item, but need to keep going until find an item
+            // that is selected to get the closest one
             if (!moveItemsSet.has(item))
             {
                 actualDropItem=item;
+            }
+
+            // found an item that is selected, end the search
+            else
+            {
+                break;
             }
         }
     }
@@ -75,31 +76,34 @@ export function moveItemsAfter(
     // target the drop group (found the index of earlier)
     const newDropGroup:FileItemGroup=newGroups[dropItemGroupI];
 
-    // find index to drop items after by looking for the actual drop item again.
-    // if the actual drop item was null (because there was no valid items before the
-    // drop item), then it stays defaulted at 0.
-    var actualDropIndex:number=0;
+    // if we have an actual drop item, look for it to insert items after
     if (actualDropItem)
     {
-        actualDropIndex=_.findIndex(newDropGroup.items,(item:string):boolean=>{
+        // find index to drop items after by looking for the actual drop item again.
+        var actualDropIndex:number=_.findIndex(newDropGroup.items,(item:string):boolean=>{
             return item==actualDropItem;
         });
+
+        // strange situation, failed to find the actual drop item.
+        if (actualDropIndex<0)
+        {
+            console.error("failed to find actual drop item after purging");
+            return groups;
+        }
+        // increment by 1 to place after the drop index. without increment, places before
+        if (!beforeItem)
+        {
+            actualDropIndex+=1;
+        }
+
+        newDropGroup.items.splice(actualDropIndex,0,...moveItems);
     }
 
-    // strange situation, failed to find the actual drop item.
-    if (actualDropIndex<0)
+    // if we dont have a drop item, then drop at the beginning of the group
+    else
     {
-        console.error("failed to find actual drop item after purging");
-        return groups;
+        newDropGroup.items.splice(0,0,...moveItems);
     }
-
-    // increment by 1 to place after the drop index. without increment, places before
-    if (!beforeItem)
-    {
-        actualDropIndex+=1;
-    }
-
-    newDropGroup.items.splice(actualDropIndex,0,...moveItems);
 
     return newGroups;
 }

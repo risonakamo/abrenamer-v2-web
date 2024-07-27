@@ -87,8 +87,9 @@
   }
 
   /** on drop, trigger drop event, but also clear all drag counts */
-  function h_drop():void
+  function h_drop(e:DragEvent):void
   {
+    e.stopPropagation();
     dragCounter=0;
     dispatch("drop");
   }
