@@ -148,7 +148,7 @@
         fileGroups,
         moveTargets,
         dropGroupIndex,
-        "back",
+        "front",
       );
     }
 
