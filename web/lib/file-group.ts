@@ -70,15 +70,7 @@ export function moveItemsAfter(
     }
 
     // from all groups, purge all the target move items
-    const newGroups:FileItemGroup[]=_.map(groups,(group:FileItemGroup):FileItemGroup=>{
-        return {
-            name:group.name,
-            // reject items that are in the move items set
-            items:_.reject(group.items,(item:string):boolean=>{
-                return moveItemsSet.has(item);
-            })
-        };
-    });
+    const newGroups:FileItemGroup[]=purgeItemsFromGroups(groups,moveItems);
 
     // target the drop group (found the index of earlier)
     const newDropGroup:FileItemGroup=newGroups[dropItemGroupI];
@@ -110,4 +102,49 @@ export function moveItemsAfter(
     newDropGroup.items.splice(actualDropIndex,0,...moveItems);
 
     return newGroups;
+}
+
+/** similar to move items after, but targets a group instead of some item. can place at
+ *  end of group or front */
+export function moveItemsIntoGroup(
+    groups:FileItemGroup[],
+    moveItems:string[],
+    dropGroupIndex:number,
+    placement:"front"|"back",
+):FileItemGroup[]
+{
+    // purge all the target items from groups
+    const newgroups=purgeItemsFromGroups(groups,moveItems);
+
+    // target drop group index and insert at beginning or end
+    if (placement=="front")
+    {
+        newgroups[dropGroupIndex].items.splice(0,0,...moveItems);
+    }
+
+    else if (placement=="back")
+    {
+        newgroups[dropGroupIndex].items.push(...moveItems);
+    }
+
+    return newgroups;
+}
+
+/** purge list of items from a groups array */
+function purgeItemsFromGroups(
+    groups:FileItemGroup[],
+    items:string[],
+):FileItemGroup[]
+{
+    const itemsSet:Set<string>=new Set(items);
+
+    return _.map(groups,(group:FileItemGroup):FileItemGroup=>{
+        return {
+            name:group.name,
+            // reject items that are in the move items set
+            items:_.reject(group.items,(item:string):boolean=>{
+                return itemsSet.has(item);
+            })
+        };
+    });
 }

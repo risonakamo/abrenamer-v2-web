@@ -4,7 +4,7 @@
   import ImageTile from "@/components/image-tile/image-tile.svelte";
   import NewGroupDropZone from "@/components/new-group-drop-zone/new-group-drop-zone.svelte";
   import FileItemGroupContainer from "@/components/file-item-group-container/file-item-group-container.svelte";
-  import {moveItemsAfter} from "@/lib/file-group";
+  import {moveItemsAfter, moveItemsIntoGroup} from "@/lib/file-group";
 
   // --- states
   // all file items data in no particular order
@@ -116,109 +116,51 @@
       }
     );
 
+    // determine the items that are about to be moved. if the dragged item is selected,
+    // move all the selected items. otherwise, just move the single dragged item
+    var moveTargets:string[]=[];
+
+    if (dragItemIsSelected)
+    {
+      moveTargets=selectedFileItemsOrdered;
+    }
+
+    else
+    {
+      moveTargets=[draggedItem.filepath];
+    }
+
     // move to single drop target mode
     if (dropTarget!=null)
     {
-      // if it is, move all selected items to the drop point
-      if (dragItemIsSelected)
-      {
-        fileGroups=moveItemsAfter(
-          fileGroups,
-          selectedFileItemsOrdered,
-          dropTarget,
-          false
-        );
-
-        selectedFileItemsOrdered=[];
-      }
-
-      // otherwise, just move the single item that is being dragged
-      else
-      {
-        fileGroups=moveItemsAfter(
-          fileGroups,
-          [draggedItem.filepath],
-          dropTarget,
-          false
-        );
-      }
+      fileGroups=moveItemsAfter(
+        fileGroups,
+        moveTargets,
+        dropTarget,
+        false
+      );
     }
 
+    // drop into group mode
     else if (dropGroupIndex!=null)
     {
-      const targetFileGroup:FileItemGroup=fileGroups[dropGroupIndex];
-
-      console.log("placing into",targetFileGroup);
-
-      // if the target group is empty
-      if (!targetFileGroup.items.length)
-      {
-        // item is selected. move all the selected items into the group
-        if (dragItemIsSelected)
-        {
-          targetFileGroup.items.push(...selectedFileItemsOrdered);
-        }
-
-        // item was not selected. push the single dragged item
-        else
-        {
-          targetFileGroup.items.push(draggedItem.filepath);
-        }
-
-        fileGroups=fileGroups;
-      }
-
-      // target group is not empty. need to target the last item or 1st item in the group
-      else
-      {
-        var groupDropItem:string|undefined;
-
-        // determine items to move. either all the selected items if the item being dragged is selected,
-        // or just the one dragged item
-        var itemsToMove:string[]=[];
-
-        if (dragItemIsSelected)
-        {
-          itemsToMove=selectedFileItemsOrdered;
-        }
-
-        else
-        {
-          itemsToMove=[draggedItem.filepath];
-        }
-
-        // back of group mode
-        if (!frontOfGroup)
-        {
-          groupDropItem=_.last(targetFileGroup.items);
-
-          if (!groupDropItem)
-          {
-            console.error("unable to get last group item");
-            return;
-          }
-        }
-
-        // front of group mode
-        else
-        {
-          groupDropItem=targetFileGroup.items[0];
-        }
-
-        fileGroups=moveItemsAfter(
-          fileGroups,
-          itemsToMove,
-          groupDropItem,
-          false,
-        );
-
-        console.log("new filegroups",fileGroups);
-      }
+      fileGroups=moveItemsIntoGroup(
+        fileGroups,
+        moveTargets,
+        dropGroupIndex,
+        "back",
+      );
     }
 
     else
     {
       console.error("did not provide drop target or drop group");
+    }
+
+    // after the move, clear all selected items, if the dragged item was selected
+    if (dragItemIsSelected)
+    {
+      selectedFileItemsOrdered=[];
     }
   }
 
@@ -243,7 +185,6 @@
        *  if shift key is held, drop front of group. */
       function h_groupDrop():void
       {
-        console.log("group drop trigger");
         moveDraggeditems(
           null,
           i,
