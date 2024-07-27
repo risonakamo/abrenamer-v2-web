@@ -20,10 +20,15 @@
     dragCount--;
   }
 
-  function h_dragend():void
+  function h_drop():void
   {
     dragCount=0;
     dispatch("drop");
+  }
+
+  function h_dragend():void
+  {
+    dragCount=0;
   }
 
   var draggedOver:boolean=false;
@@ -35,8 +40,8 @@
 </style>
 
 <div class="file-item-group-container" class:drag-over={draggedOver}
-  on:dragenter={h_dragEnter} on:dragleave={h_dragOut} on:drop={h_dragend}
-  on:dragend={h_dragend}
+  on:dragenter={h_dragEnter} on:dragleave={h_dragOut} on:drop={h_drop}
+  on:dragend={h_dragend} on:dragover|preventDefault
 >
   <h2>{title} ({numItems})</h2>
   <div class="contents">

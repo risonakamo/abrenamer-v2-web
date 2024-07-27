@@ -148,6 +148,8 @@
     {
       const targetFileGroup:FileItemGroup=fileGroups[dropGroupIndex];
 
+      console.log("placing into",targetFileGroup);
+
       // if the target group is empty
       if (!targetFileGroup.items.length)
       {
@@ -209,6 +211,8 @@
           groupDropItem,
           false,
         );
+
+        console.log("new filegroups",fileGroups);
       }
     }
 
@@ -232,17 +236,24 @@
   var renderedFileGroups:RenderedFileGroup[]=[];
   $: {
     let count:number=0;
-    renderedFileGroups=_.map(fileGroups,(filegroup:FileItemGroup):RenderedFileGroup=>{
+    renderedFileGroups=_.map(fileGroups,(filegroup:FileItemGroup,i:number):RenderedFileGroup=>{
       count++;
 
-      /** dropped in group */
+      /** dropped in group. call move dragged items with the group index as the target.
+       *  if shift key is held, drop front of group. */
       function h_groupDrop():void
       {
-
+        console.log("group drop trigger");
+        moveDraggeditems(
+          null,
+          i,
+          false
+        );
       }
 
       return {
         name:`#${count}`,
+        onDrop:h_groupDrop,
         items:_.map(filegroup.items,(filepath:string):RenderedFileItem=>{
           const item:FileItemData=fileItemsData[filepath];
 
@@ -314,7 +325,8 @@
 
   <div class="tiles">
     {#each renderedFileGroups as filegroup}
-      <FileItemGroupContainer title={filegroup.name} numItems={filegroup.items.length}>
+      <FileItemGroupContainer title={filegroup.name} numItems={filegroup.items.length}
+        on:drop={filegroup.onDrop}>
       {#each filegroup.items as item (item.filepath)}
         <ImageTile imgSrc={item.imagePath} fileName={item.filename}
           fileType={item.filetype} selected={item.selected} on:click={item.onClick}

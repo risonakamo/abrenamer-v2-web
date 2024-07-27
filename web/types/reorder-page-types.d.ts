@@ -44,4 +44,5 @@ interface RenderedFileGroup
 {
     name:string
     items:RenderedFileItem[]
+    onDrop():void
 }
