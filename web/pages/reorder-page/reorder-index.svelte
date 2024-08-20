@@ -5,6 +5,7 @@
   import NewGroupDropZone from "@/components/new-group-drop-zone/new-group-drop-zone.svelte";
   import FileItemGroupContainer from "@/components/file-item-group-container/file-item-group-container.svelte";
   import {moveItemsAfter, moveItemsIntoGroup} from "@/lib/file-group";
+  import DragProxy from "@/components/drag-proxy/drag-proxy.svelte";
 
   // --- states
   // all file items data in no particular order
@@ -290,7 +291,7 @@
 <main>
   <div class="top-zone">
     <div class="drag-handler-zone">
-
+      <DragProxy/>
     </div>
     <div class="new-group-drop-zone-zone">
       <NewGroupDropZone on:click={h_groupZoneClick}/>
