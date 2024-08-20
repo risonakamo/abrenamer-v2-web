@@ -4,7 +4,7 @@
   import {createEventDispatcher} from "svelte";
 
   const dispatch=createEventDispatcher<{
-    drop:void
+    drop:void,
   }>();
 
   // disable the drop zone because there are no items to form a new group from.
@@ -26,7 +26,7 @@
 
 <div class="new-group-drop-zone" class:no-items-disabled={disabledNoItems}
   class:drag-over={draggedOver && !disabledNoItems} on:drop={h_drop}
-  on:dragover|preventDefault
+  on:dragover|preventDefault on:click
 >
   {#if !disabledNoItems}
     <p>+ new group</p>

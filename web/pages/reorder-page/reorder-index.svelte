@@ -164,9 +164,42 @@
     }
   }
 
+  /** cause all selected items to be moved into a new group. also deselects all
+   *  selected items */
+  function newGroupFromSelectedItems():void
+  {
+    // does nothing if nothing is selected
+    if (!selectedFileItemsOrdered.length)
+    {
+      return;
+    }
+
+    // add a new group
+    fileGroups.push({
+      name:"",
+      items:[],
+    });
+
+    const newGroupIndex:number=fileGroups.length-1;
+
+    fileGroups=moveItemsIntoGroup(
+      fileGroups,
+      selectedFileItemsOrdered,
+      newGroupIndex,
+      "front",
+    );
+
+    selectedFileItemsOrdered=[];
+  }
+
 
 
   // --- handlers
+  /** clicked on the group zone. move all selected items into a new group */
+  function h_groupZoneClick():void
+  {
+    newGroupFromSelectedItems();
+  }
 
 
 
@@ -260,7 +293,7 @@
 
     </div>
     <div class="new-group-drop-zone-zone">
-      <NewGroupDropZone/>
+      <NewGroupDropZone on:click={h_groupZoneClick}/>
     </div>
   </div>
 
