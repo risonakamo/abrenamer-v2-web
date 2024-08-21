@@ -28,7 +28,7 @@ interface RenderedFileItem extends FileItemData
 
     onClick():void
     onDragStart():void
-    onDrop():void
+    onDrop(e:CustomEvent<DragEvent>):void
 }
 
 /** group of file items */

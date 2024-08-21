@@ -1,11 +1,13 @@
 <script lang="ts">
   import _ from "lodash";
+  import {extname,basename} from "path-browserify";
 
   import ImageTile from "@/components/image-tile/image-tile.svelte";
   import NewGroupDropZone from "@/components/new-group-drop-zone/new-group-drop-zone.svelte";
   import FileItemGroupContainer from "@/components/file-item-group-container/file-item-group-container.svelte";
   import {moveItemsAfter, moveItemsIntoGroup} from "@/lib/file-group";
   import DragProxy from "@/components/drag-proxy/drag-proxy.svelte";
+  import {isImage} from "@/lib/path-lib";
 
   // --- states
   // all file items data in no particular order
@@ -193,6 +195,23 @@
     selectedFileItemsOrdered=[];
   }
 
+  function addItems(newItems:string[]):void
+  {
+    const newFileItemsData:FileItemDataDict=_.cloneDeep(fileItemsData);
+
+    for (let itemI=0;itemI<newItems.length;itemI++)
+    {
+      const item:string=newItems[itemI];
+
+      newFileItemsData[item]={
+        filepath:item,
+        filename:basename(item),
+        filetype:extname(item),
+        isImage:isImage(item),
+      };
+    }
+  }
+
 
 
   // --- handlers
@@ -256,10 +275,20 @@
             draggedItem=item.filepath;
           }
 
-          /** dropped on a tile. use the move dragged items, giving the tile that was
-           *  just dropped on as the drop target */
-          function h_tileDrop():void
+          /** dropped on a tile.
+           *  - if the items being dragged are external, insert the new items.
+           *  - otherwise, if there is a selected item, use the move dragged items, giving
+           *    the tile that was just dropped on as the drop target. */
+          function h_tileDrop(e:CustomEvent<DragEvent>):void
           {
+            e.detail.preventDefault();
+
+            if (e.detail.dataTransfer?.files.length)
+            {
+              console.log(e.detail.dataTransfer.files);
+              return;
+            }
+
             moveDraggeditems(
               item.filepath,
               null,
@@ -329,3 +358,5 @@
 
   </div>
 </main>
+
+<svelte:document on:drop|preventDefault/>

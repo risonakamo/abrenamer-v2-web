@@ -5,7 +5,7 @@
   import {createEventDispatcher} from "svelte";
 
   const dispatch=createEventDispatcher<{
-    drop:void
+    drop:DragEvent
   }>();
 
   // --- props
@@ -91,7 +91,7 @@
   {
     e.stopPropagation();
     dragCounter=0;
-    dispatch("drop");
+    dispatch("drop",e);
   }
 
   /** clear drag counts on drag end */
@@ -107,7 +107,7 @@
 
 <div class="image-tile" on:dragenter={h_dragEnter} on:dragleave={h_dragOut}
   on:click on:dragstart on:drop={h_drop} on:dragover|preventDefault
-  on:dragend={h_dragend}
+  on:dragend|preventDefault={h_dragend}
 >
   <div class="img-contain" class:selected={actualSelected} class:drag-over={dragOver}
     draggable={true}

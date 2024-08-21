@@ -47,9 +47,15 @@ importers:
       '@types/lodash':
         specifier: ^4.17.7
         version: 4.17.7
+      '@types/path-browserify':
+        specifier: ^1.0.3
+        version: 1.0.3
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
+      path-browserify:
+        specifier: ^1.0.1
+        version: 1.0.1
       rollup:
         specifier: ^4.18.1
         version: 4.18.1
@@ -1258,6 +1264,9 @@ packages:
   '@types/node@20.14.10':
     resolution: {integrity: sha512-MdiXf+nDuMvY0gJKxyfZ7/6UFsETO7mGKF54MVD/ekJS6HdFtpZFBgrh6Pseu64XTb2MLyFPlbW6hj8HYRQNOQ==}
 
+  '@types/path-browserify@1.0.3':
+    resolution: {integrity: sha512-ZmHivEbNCBtAfcrFeBCiTjdIc2dey0l7oCGNGpSuRTy8jP6UVND7oUowlvDujBy8r2Hoa8bfFUOCiPWfmtkfxw==}
+
   '@types/prop-types@15.7.12':
     resolution: {integrity: sha512-5zvhXYtRNRluoE/jAp4GVsSduVUzNWKkOZrCDBWYtE7biZywwdC2AcEzg+cSMLFRfVgeAFqpfNabiPjxFddV1Q==}
 
@@ -2462,6 +2471,9 @@ packages:
   parseurl@1.3.3:
     resolution: {integrity: sha512-CiyeOxFT/JZyN5m0z9PfXw4SCBJ6Sygz1Dpl0wqjlhDEGGBP1GnsUVEL0p63hoG1fcj3fHynXi9NYO4nWOL+qQ==}
     engines: {node: '>= 0.8'}
+
+  path-browserify@1.0.1:
+    resolution: {integrity: sha512-b7uo2UCUOYZcnF/3ID0lulOJi/bafxa1xPe7ZPsammBSpjSWQkjNxlt635YGS2MiR9GjvuXCtz2emr3jbsz98g==}
 
   path-exists@3.0.0:
     resolution: {integrity: sha512-bpC7GYwiDYQ4wYLe+FA8lhRjhQCMcQGuSgGGqDkg/QerRWw9CmGRT0iSOVRSZJ29NMLZgIzqaljJ63oaL4NIJQ==}
@@ -4652,6 +4664,8 @@ snapshots:
     dependencies:
       undici-types: 5.26.5
 
+  '@types/path-browserify@1.0.3': {}
+
   '@types/prop-types@15.7.12': {}
 
   '@types/pug@2.0.10': {}
@@ -5903,6 +5917,8 @@ snapshots:
       callsites: 3.1.0
 
   parseurl@1.3.3: {}
+
+  path-browserify@1.0.1: {}
 
   path-exists@3.0.0: {}
 
