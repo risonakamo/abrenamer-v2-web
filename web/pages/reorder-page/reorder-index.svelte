@@ -54,8 +54,8 @@
     }
   ];
 
-  // item currently being dragged
-  var draggedItem:FileItemData|undefined=undefined;
+  // item currently being dragged. the string is the full filepath of the item (uniquely identifying it)
+  var draggedItem:string|undefined=undefined;
 
 
 
@@ -113,7 +113,7 @@
     const dragItemIsSelected:boolean=_.some(
       selectedFileItemsOrdered,
       (item:string):boolean=>{
-        return item==draggedItem?.filepath;
+        return item==draggedItem;
       }
     );
 
@@ -128,7 +128,7 @@
 
     else
     {
-      moveTargets=[draggedItem.filepath];
+      moveTargets=[draggedItem];
     }
 
     // move to single drop target mode
@@ -202,6 +202,18 @@
     newGroupFromSelectedItems();
   }
 
+  /** started dragging the proxy. set the dragged item to the first of the selected items.
+   *  if none, then nothing because that shouldn't happen */
+  function h_dragProxyStart():void
+  {
+    if (!selectedFileItemsOrdered.length)
+    {
+      return;
+    }
+
+    draggedItem=selectedFileItemsOrdered[0];
+  }
+
 
 
 
@@ -241,7 +253,7 @@
           /** drag start. set the dragged item */
           function h_tileDragStart():void
           {
-            draggedItem=item;
+            draggedItem=item.filepath;
           }
 
           /** dropped on a tile. use the move dragged items, giving the tile that was
@@ -291,7 +303,7 @@
 <main>
   <div class="top-zone">
     <div class="drag-handler-zone">
-      <DragProxy/>
+      <DragProxy selectedCount={selectedFileItemsOrdered.length} on:dragstart={h_dragProxyStart}/>
     </div>
     <div class="new-group-drop-zone-zone">
       <NewGroupDropZone on:click={h_groupZoneClick}/>
