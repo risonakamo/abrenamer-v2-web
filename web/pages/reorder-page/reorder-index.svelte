@@ -1,13 +1,14 @@
 <script lang="ts">
   import _ from "lodash";
   import {extname,basename} from "path-browserify";
+  import normalise from "normalize-path";
 
   import ImageTile from "@/components/image-tile/image-tile.svelte";
   import NewGroupDropZone from "@/components/new-group-drop-zone/new-group-drop-zone.svelte";
   import FileItemGroupContainer from "@/components/file-item-group-container/file-item-group-container.svelte";
   import {moveItemsAfter, moveItemsIntoGroup} from "@/lib/file-group";
   import DragProxy from "@/components/drag-proxy/drag-proxy.svelte";
-  import {isImage} from "@/lib/path-lib";
+  import {isImage,normalisePaths} from "@/lib/path-lib";
 
   // --- states
   // all file items data in no particular order
@@ -195,13 +196,16 @@
     selectedFileItemsOrdered=[];
   }
 
-  function addItems(newItems:string[]):void
+  /** add list of filepaths as new items to be tracked. adds it after the target item */
+  function addItems(newItems:string[],target:string):void
   {
     const newFileItemsData:FileItemDataDict=_.cloneDeep(fileItemsData);
+    var newGroups:FileItemGroup[]=_.cloneDeep(fileGroups);
 
+    // insert new items into the file items data tracking dict
     for (let itemI=0;itemI<newItems.length;itemI++)
     {
-      const item:string=newItems[itemI];
+      const item:string=normalise(newItems[itemI]);
 
       newFileItemsData[item]={
         filepath:item,
@@ -210,6 +214,17 @@
         isImage:isImage(item),
       };
     }
+
+    // use move items after to insert the new items into the group list after the target drop item
+    newGroups=moveItemsAfter(
+      newGroups,
+      newItems,
+      target,
+      false,
+    )
+
+    fileItemsData=newFileItemsData;
+    fileGroups=newGroups;
   }
 
 
@@ -283,9 +298,22 @@
           {
             e.detail.preventDefault();
 
+            // the dragged item had new files. perform add items, using the item that was dropped
+            // on as the target.
             if (e.detail.dataTransfer?.files.length)
             {
               console.log(e.detail.dataTransfer.files);
+
+              const files:string[]=normalisePaths(
+                _.map(e.detail.dataTransfer.files,(file:File):string=>{
+                  return (file as ElectronFile).path;
+                }),
+              );
+
+              addItems(
+                files,
+                filepath,
+              );
               return;
             }
 

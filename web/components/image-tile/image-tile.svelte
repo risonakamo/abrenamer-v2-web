@@ -123,7 +123,7 @@
     {#if imageMode}
       <img src={imgSrc} on:load={h_imgLoad} alt="missing img" bind:this={imageRef}
         class:wide-fit={isWide} class:tall-fit={isTall} class:loading={isLoading}
-        class:selected={actualSelected}
+        class:selected={actualSelected} draggable={false}
       />
     {:else}
       <p class="filetype" class:selected={actualSelected}>{fileType}</p>
