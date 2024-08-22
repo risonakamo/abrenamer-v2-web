@@ -8,7 +8,7 @@
   import FileItemGroupContainer from "@/components/file-item-group-container/file-item-group-container.svelte";
   import {moveItemsAfter, moveItemsIntoGroup} from "@/lib/file-group";
   import DragProxy from "@/components/drag-proxy/drag-proxy.svelte";
-  import {isImage,normalisePaths} from "@/lib/path-lib";
+  import {filesListToPathList, isImage,normalisePaths} from "@/lib/path-lib";
 
   // --- states
   // all file items data in no particular order
@@ -196,8 +196,13 @@
     selectedFileItemsOrdered=[];
   }
 
-  /** add list of filepaths as new items to be tracked. adds it after the target item */
-  function addItems(newItems:string[],target:string):void
+  /** add list of filepaths as new items to be tracked. adds it after the target item, or group,
+   *  if group target is given. only 1 target arg should be used. */
+  function addItems(
+    newItems:string[],
+    target:string|null,
+    groupTarget:number|null,
+  ):void
   {
     const newFileItemsData:FileItemDataDict=_.cloneDeep(fileItemsData);
     var newGroups:FileItemGroup[]=_.cloneDeep(fileGroups);
@@ -215,13 +220,32 @@
       };
     }
 
-    // use move items after to insert the new items into the group list after the target drop item
-    newGroups=moveItemsAfter(
-      newGroups,
-      newItems,
-      target,
-      false,
-    )
+    if (target!=null)
+    {
+      // use move items after to insert the new items into the group list after the target drop item
+      newGroups=moveItemsAfter(
+        newGroups,
+        newItems,
+        target,
+        false,
+      )
+    }
+
+    else if (groupTarget!=null)
+    {
+      newGroups=moveItemsIntoGroup(
+        newGroups,
+        newItems,
+        groupTarget,
+        "back",
+      );
+    }
+
+    else
+    {
+      console.error("no target was specified");
+      throw "no target";
+    }
 
     fileItemsData=newFileItemsData;
     fileGroups=newGroups;
@@ -261,10 +285,26 @@
     renderedFileGroups=_.map(fileGroups,(filegroup:FileItemGroup,i:number):RenderedFileGroup=>{
       count++;
 
-      /** dropped in group. call move dragged items with the group index as the target.
-       *  if shift key is held, drop front of group. */
-      function h_groupDrop():void
+      /** dropped in group.
+       *  - if dropped items from outside, add the new items to the group.
+       *  - otherwise, call move dragged items with the group index as the target.
+       *  todo: if shift key is held, drop front of group. */
+      function h_groupDrop(e:CustomEvent<DragEvent>):void
       {
+        // files from external drop
+        if (e.detail.dataTransfer?.files.length)
+        {
+          const files:string[]=filesListToPathList(e.detail.dataTransfer.files);
+
+          addItems(
+            files,
+            null,
+            i,
+          );
+
+          return;
+        }
+
         moveDraggeditems(
           null,
           i,
@@ -304,15 +344,12 @@
             {
               console.log(e.detail.dataTransfer.files);
 
-              const files:string[]=normalisePaths(
-                _.map(e.detail.dataTransfer.files,(file:File):string=>{
-                  return (file as ElectronFile).path;
-                }),
-              );
+              const files:string[]=filesListToPathList(e.detail.dataTransfer.files);
 
               addItems(
                 files,
                 filepath,
+                null,
               );
               return;
             }

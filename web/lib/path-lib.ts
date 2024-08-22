@@ -27,5 +27,13 @@ export function normalisePaths(paths:string[]):string[]
 {
     return _.map(paths,(aPath:string):string=>{
         return normalizePath(aPath);
-    })
+    });
+}
+
+/** convert files list from data transfer into just the full string paths */
+export function filesListToPathList(filelist:FileList):string[]
+{
+    return _.map(filelist,(file:File):string=>{
+        return normalizePath((file as ElectronFile).path);
+    });
 }

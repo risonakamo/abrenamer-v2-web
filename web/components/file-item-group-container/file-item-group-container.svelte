@@ -2,7 +2,7 @@
   import {createEventDispatcher} from "svelte";
 
   const dispatch=createEventDispatcher<{
-    drop:void
+    drop:DragEvent
   }>();
 
   export var title:string="";
@@ -20,10 +20,10 @@
     dragCount--;
   }
 
-  function h_drop():void
+  function h_drop(e:DragEvent):void
   {
     dragCount=0;
-    dispatch("drop");
+    dispatch("drop",e);
   }
 
   function h_dragend():void

@@ -44,5 +44,5 @@ interface RenderedFileGroup
 {
     name:string
     items:RenderedFileItem[]
-    onDrop():void
+    onDrop(e:CustomEvent<DragEvent>):void
 }
