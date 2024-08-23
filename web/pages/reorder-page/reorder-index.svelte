@@ -9,53 +9,17 @@
   import {moveItemsAfter, moveItemsIntoGroup} from "@/lib/file-group";
   import DragProxy from "@/components/drag-proxy/drag-proxy.svelte";
   import {filesListToPathList, isImage,normalisePaths} from "@/lib/path-lib";
+  import InitialDropZone from "@/components/initial-drop-zone/initial-drop-zone.svelte";
 
   // --- states
   // all file items data in no particular order
-  var fileItemsData:FileItemDataDict={
-    "C:/Users/ktkm2/Desktop/newprojs/abrenamer-v2/Bananavarieties.jpg":{
-      filepath:"C:/Users/ktkm2/Desktop/newprojs/abrenamer-v2/Bananavarieties.jpg",
-      isImage:true,
-      filename:"Bananavarieties.jpg",
-      filetype:"jpg",
-    },
-    "somewhere":{
-      filepath:"somewhere",
-      isImage:false,
-      filename:"something.txt",
-      filetype:"txt",
-    },
-    "C:/Users/ktkm2/Desktop/draw/ref/imgs/Annotation 2024-05-10 022025.png":{
-      filepath:"C:/Users/ktkm2/Desktop/draw/ref/imgs/Annotation 2024-05-10 022025.png",
-      isImage:true,
-      filename:"Annotation 2024-05-10 022025.png",
-      filetype:"png",
-    }
-  };
+  var fileItemsData:FileItemDataDict={};
 
   // selected files, in selection order. uses filepath as key
   var selectedFileItemsOrdered:string[]=[];
 
   // ordering of the items. uses filepath as key
-  var fileGroups:FileItemGroup[]=[
-    {
-      name:"",
-      items:[
-        "C:/Users/ktkm2/Desktop/newprojs/abrenamer-v2/Bananavarieties.jpg",
-        "C:/Users/ktkm2/Desktop/draw/ref/imgs/Annotation 2024-05-10 022025.png",
-      ]
-    },
-    {
-      name:"",
-      items:[
-        "somewhere"
-      ]
-    },
-    {
-      name:"",
-      items:[]
-    }
-  ];
+  var fileGroups:FileItemGroup[]=[];
 
   // item currently being dragged. the string is the full filepath of the item (uniquely identifying it)
   var draggedItem:string|undefined=undefined;
@@ -178,6 +142,16 @@
       return;
     }
 
+    addItemsToNewGroup(selectedFileItemsOrdered);
+
+    selectedFileItemsOrdered=[];
+  }
+
+  /** add all target items to a new group */
+  function addItemsToNewGroup(items:string[]):void
+  {
+    addItemsToItemsData(items);
+
     // add a new group
     fileGroups.push({
       name:"",
@@ -188,12 +162,31 @@
 
     fileGroups=moveItemsIntoGroup(
       fileGroups,
-      selectedFileItemsOrdered,
+      items,
       newGroupIndex,
       "front",
     );
+  }
 
-    selectedFileItemsOrdered=[];
+  /** add all full paths to items data dict */
+  function addItemsToItemsData(paths:string[]):void
+  {
+    const newFileItemsData:FileItemDataDict=_.cloneDeep(fileItemsData);
+
+    // insert new items into the file items data tracking dict
+    for (let itemI=0;itemI<paths.length;itemI++)
+    {
+      const item:string=normalise(paths[itemI]);
+
+      newFileItemsData[item]={
+        filepath:item,
+        filename:basename(item),
+        filetype:extname(item),
+        isImage:isImage(item),
+      };
+    }
+
+    fileItemsData=newFileItemsData;
   }
 
   /** add list of filepaths as new items to be tracked. adds it after the target item, or group,
@@ -204,21 +197,9 @@
     groupTarget:number|null,
   ):void
   {
-    const newFileItemsData:FileItemDataDict=_.cloneDeep(fileItemsData);
+    addItemsToItemsData(newItems);
+
     var newGroups:FileItemGroup[]=_.cloneDeep(fileGroups);
-
-    // insert new items into the file items data tracking dict
-    for (let itemI=0;itemI<newItems.length;itemI++)
-    {
-      const item:string=normalise(newItems[itemI]);
-
-      newFileItemsData[item]={
-        filepath:item,
-        filename:basename(item),
-        filetype:extname(item),
-        isImage:isImage(item),
-      };
-    }
 
     if (target!=null)
     {
@@ -247,7 +228,6 @@
       throw "no target";
     }
 
-    fileItemsData=newFileItemsData;
     fileGroups=newGroups;
   }
 
@@ -270,6 +250,19 @@
     }
 
     draggedItem=selectedFileItemsOrdered[0];
+  }
+
+  /** dropped items in the initial zone. add the items as new items */
+  function h_initialZoneDrop(e:DragEvent):void
+  {
+    if (!e.dataTransfer?.files.length)
+    {
+      return;
+    }
+
+    const files:string[]=filesListToPathList(e.dataTransfer?.files);
+
+    addItemsToNewGroup(files);
   }
 
 
@@ -388,6 +381,10 @@
       };
     });
   }
+
+  // initial drop zone is shown when there are no items
+  var showInitialDropZone:boolean=true;
+  $: showInitialDropZone=_.size(fileItemsData)==0;
 </script>
 
 <style lang="sass">
@@ -404,20 +401,24 @@
     </div>
   </div>
 
-  <div class="tiles">
-    {#each renderedFileGroups as filegroup}
-      <FileItemGroupContainer title={filegroup.name} numItems={filegroup.items.length}
-        on:drop={filegroup.onDrop}>
-      {#each filegroup.items as item (item.filepath)}
-        <ImageTile imgSrc={item.imagePath} fileName={item.filename}
-          fileType={item.filetype} selected={item.selected} on:click={item.onClick}
-          selectedCount={item.selectedCount} on:dragstart={item.onDragStart}
-          on:drop={item.onDrop}
-        />
+  {#if showInitialDropZone}
+    <InitialDropZone on:drop={h_initialZoneDrop}/>
+  {:else}
+    <div class="tiles">
+      {#each renderedFileGroups as filegroup}
+        <FileItemGroupContainer title={filegroup.name} numItems={filegroup.items.length}
+          on:drop={filegroup.onDrop}>
+        {#each filegroup.items as item (item.filepath)}
+          <ImageTile imgSrc={item.imagePath} fileName={item.filename}
+            fileType={item.filetype} selected={item.selected} on:click={item.onClick}
+            selectedCount={item.selectedCount} on:dragstart={item.onDragStart}
+            on:drop={item.onDrop}
+          />
+        {/each}
+        </FileItemGroupContainer>
       {/each}
-      </FileItemGroupContainer>
-    {/each}
-  </div>
+    </div>
+  {/if}
 
   <div class="status-bar">
 
