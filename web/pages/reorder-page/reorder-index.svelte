@@ -10,6 +10,7 @@
   import DragProxy from "@/components/drag-proxy/drag-proxy.svelte";
   import {filesListToPathList, isImage,normalisePaths} from "@/lib/path-lib";
   import InitialDropZone from "@/components/initial-drop-zone/initial-drop-zone.svelte";
+  import Button1 from "@/components/button1/button1.svelte";
 
   // --- states
   // all file items data in no particular order
@@ -398,6 +399,9 @@
     </div>
     <div class="new-group-drop-zone-zone">
       <NewGroupDropZone on:click={h_groupZoneClick}/>
+    </div>
+    <div class="rename-button-zone">
+      <Button1/>
     </div>
   </div>
 
