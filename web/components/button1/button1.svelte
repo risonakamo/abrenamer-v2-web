@@ -7,5 +7,5 @@
 </style>
 
 <div class="button1">
-    Rename
+    <p>Rename</p>
 </div>
