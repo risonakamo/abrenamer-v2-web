@@ -1,4 +1,7 @@
 <script lang="ts">
+    import RenameRuleSelector from
+    "@/components/rename-rule-selector/rename-rule-selector.svelte";
+
 
 </script>
 
@@ -6,4 +9,4 @@
     @import "./rename-index.sass"
 </style>
 
-hello
+<RenameRuleSelector/>
