@@ -16,5 +16,9 @@ import {Story,Template} from "@storybook/addon-svelte-csf";
 </Template>
 
 <Story name="normal" args={{
+    text:"Rename",
+}}/>
 
+<Story name="normal2" args={{
+    text:"Do Rename",
 }}/>

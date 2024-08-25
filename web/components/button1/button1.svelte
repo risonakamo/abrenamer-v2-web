@@ -1,5 +1,5 @@
 <script lang="ts">
-
+    export var text:string="";
 </script>
 
 <style lang="sass">
@@ -7,5 +7,5 @@
 </style>
 
 <div class="button1">
-    <p>Rename</p>
+    <p>{text}</p>
 </div>
