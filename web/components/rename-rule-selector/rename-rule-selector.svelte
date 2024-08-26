@@ -7,16 +7,18 @@
 </style>
 
 <div class="rename-rule-selector">
-    <div class="dropdown-zone">
-        <h2>Select Template</h2>
+    <h2>Groups Rename Rule</h2>
+    <div class="container">
+        <p>Rule</p>
+        <input type="text"/>
+
+        <p>Template</p>
         <select>
             <option>Increment Number</option>
             <option>Random Hash</option>
         </select>
     </div>
-
-    <div class="template-zone">
-        <h2>Renamer Rule Template String</h2>
-        <input type="text"/>
+    <div class="item-count">
+        <h2>Groups: 3</h2>
     </div>
 </div>
