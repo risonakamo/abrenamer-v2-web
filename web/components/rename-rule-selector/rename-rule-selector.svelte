@@ -12,10 +12,10 @@
     <h2 class="title">{titleText}</h2>
     <div class="container">
         <p>Rule</p>
-        <input type="text"/>
+        <input type="text" class="themed-input-box"/>
 
         <p>Template</p>
-        <select>
+        <select class="themed-selector-box">
             <option>Increment Number</option>
             <option>Random Hash</option>
         </select>

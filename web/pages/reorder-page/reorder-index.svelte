@@ -401,7 +401,9 @@
       <NewGroupDropZone on:click={h_groupZoneClick}/>
     </div>
     <div class="rename-button-zone">
-      <a href="./rename-page.html"><Button1/></a>
+      <a href="./rename-page.html">
+        <Button1 text="Rename"/>
+      </a>
     </div>
   </div>
 
