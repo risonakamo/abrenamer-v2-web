@@ -15,22 +15,27 @@ import RenameRuleSelector from
 
     </div>
 
-    <div class="rename-rules">
-        <div class="rule-contain">
-            <RenameRuleSelector/>
-        </div>
-        <div class="rule-contain">
-            <RenameRuleSelector/>
+    <div class="submit-zone">
+        <div class="contain">
+            <p class="input-box-label">Output Location</p>
+            <input type="text" class="themed-input-box"/>
+            <div class="button-contain">
+                <div class="inner-contain">
+                    <Button1 text="Move"/>
+                </div>
+                <div class="inner-contain">
+                    <Button1 text="Rename"/>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="submit-zone">
-        <div class="contain">
-            <input type="text" class="themed-input-box"/>
-            <div class="button-contain">
-                <Button1 text="Move"/>
-                <Button1 text="Rename"/>
-            </div>
+    <div class="rename-rules">
+        <div class="rule-contain">
+            <RenameRuleSelector titleText="Groups Rename Rule" itemCountText="Groups"/>
+        </div>
+        <div class="rule-contain">
+            <RenameRuleSelector titleText="Items Rename Rule" itemCountText="Items"/>
         </div>
     </div>
 </main>

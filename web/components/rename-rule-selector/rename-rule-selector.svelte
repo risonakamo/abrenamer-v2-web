@@ -11,10 +11,10 @@
 <div class="rename-rule-selector">
     <h2 class="title">{titleText}</h2>
     <div class="container">
-        <p>Rule</p>
+        <p class="input-box-label">Rule</p>
         <input type="text" class="themed-input-box"/>
 
-        <p>Template</p>
+        <p class="input-box-label">Template</p>
         <select class="themed-selector-box">
             <option>Increment Number</option>
             <option>Random Hash</option>
