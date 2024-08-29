@@ -11,10 +11,6 @@ import RenameRuleSelector from
 </style>
 
 <main>
-    <div class="top-zone">
-
-    </div>
-
     <div class="submit-zone">
         <div class="contain">
             <p class="input-box-label">Output Location</p>
@@ -37,5 +33,9 @@ import RenameRuleSelector from
         <div class="rule-contain">
             <RenameRuleSelector titleText="Items Rename Rule" itemCountText="Items"/>
         </div>
+    </div>
+
+    <div class="bottom-zone">
+        <Button1 text="Cancel"/>
     </div>
 </main>
