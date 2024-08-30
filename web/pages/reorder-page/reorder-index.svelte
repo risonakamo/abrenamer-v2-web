@@ -2,6 +2,7 @@
   import _ from "lodash";
   import {extname,basename} from "path-browserify";
   import normalise from "normalize-path";
+  import {onMount} from "svelte";
 
   import ImageTile from "@/components/image-tile/image-tile.svelte";
   import NewGroupDropZone from "@/components/new-group-drop-zone/new-group-drop-zone.svelte";
@@ -11,6 +12,15 @@
   import {filesListToPathList, isImage,normalisePaths} from "@/lib/path-lib";
   import InitialDropZone from "@/components/initial-drop-zone/initial-drop-zone.svelte";
   import Button1 from "@/components/button1/button1.svelte";
+  import {getItemsData, setItemsData} from "@/lib/localstorage";
+
+  /** load data from localstorage */
+  onMount(()=>{
+    const data:ItemsData=getItemsData();
+
+    fileItemsData=data.fileItemsData;
+    fileGroups=data.fileGroups;
+  });
 
   // --- states
   // all file items data in no particular order
@@ -266,6 +276,16 @@
     addItemsToNewGroup(files);
   }
 
+  /** clicked rename button. set data into storage, navigate to rename page */
+  function h_renameButtonClick():void
+  {
+    setItemsData({
+      fileItemsData,
+      fileGroups,
+    });
+    window.location.href="rename-page.html";
+  }
+
 
 
 
@@ -401,9 +421,7 @@
       <NewGroupDropZone on:click={h_groupZoneClick}/>
     </div>
     <div class="rename-button-zone">
-      <a href="./rename-page.html">
-        <Button1 text="Rename"/>
-      </a>
+      <Button1 text="Rename" on:click={h_renameButtonClick}/>
     </div>
   </div>
 

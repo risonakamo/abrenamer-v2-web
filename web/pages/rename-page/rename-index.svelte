@@ -1,8 +1,20 @@
 <script lang="ts">
+import {onMount} from "svelte";
+
 import Button1 from "@/components/button1/button1.svelte";
 import RenameRuleSelector from
     "@/components/rename-rule-selector/rename-rule-selector.svelte";
+    import {getItemsData} from "@/lib/localstorage";
 
+onMount(()=>{
+    console.log(getItemsData());
+});
+
+/** back button, return to reorder page */
+function h_backButton():void
+{
+    window.location.href="reorder-page.html";
+}
 
 </script>
 
@@ -36,6 +48,6 @@ import RenameRuleSelector from
     </div>
 
     <div class="bottom-zone">
-        <Button1 text="Cancel"/>
+        <Button1 text="Cancel" on:click={h_backButton}/>
     </div>
 </main>
