@@ -12,11 +12,11 @@
   import {filesListToPathList, isImage,normalisePaths} from "@/lib/path-lib";
   import InitialDropZone from "@/components/initial-drop-zone/initial-drop-zone.svelte";
   import Button1 from "@/components/button1/button1.svelte";
-  import {getItemsData, setItemsData} from "@/lib/localstorage";
+  import {getItemsData, setItemsData} from "@/api/bridge-api";
 
   /** load data from localstorage */
-  onMount(()=>{
-    const data:ItemsData=getItemsData();
+  onMount(async ()=>{
+    const data:ItemsData=await getItemsData();
 
     fileItemsData=data.fileItemsData;
     fileGroups=data.fileGroups;

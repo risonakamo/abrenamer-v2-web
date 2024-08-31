@@ -4,7 +4,7 @@ import {onMount} from "svelte";
 import Button1 from "@/components/button1/button1.svelte";
 import RenameRuleSelector from
     "@/components/rename-rule-selector/rename-rule-selector.svelte";
-    import {getItemsData} from "@/lib/localstorage";
+import {getItemsData} from "@/api/bridge-api";
 
 onMount(()=>{
     console.log(getItemsData());
