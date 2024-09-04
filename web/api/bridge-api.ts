@@ -2,5 +2,6 @@
 
 export const {
     setItemsData,
-    getItemsData
+    getItemsData,
+    getDefaultOutputDir,
 }=((window as any).electron as Bridge);

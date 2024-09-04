@@ -4,10 +4,14 @@ import {onMount} from "svelte";
 import Button1 from "@/components/button1/button1.svelte";
 import RenameRuleSelector from
     "@/components/rename-rule-selector/rename-rule-selector.svelte";
-import {getItemsData} from "@/api/bridge-api";
+import {getItemsData,getDefaultOutputDir} from "@/api/bridge-api";
 
-onMount(()=>{
+var outputDirText:string="";
+
+onMount(async ()=>{
     console.log(getItemsData());
+
+    outputDirText=await getDefaultOutputDir();
 });
 
 /** back button, return to reorder page */
@@ -26,7 +30,7 @@ function h_backButton():void
     <div class="submit-zone">
         <div class="contain">
             <p class="input-box-label">Output Location</p>
-            <input type="text" class="themed-input-box"/>
+            <input type="text" class="themed-input-box" bind:value={outputDirText}/>
             <div class="button-contain">
                 <div class="inner-contain">
                     <Button1 text="Move"/>
