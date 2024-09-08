@@ -5,11 +5,19 @@ import Button1 from "@/components/button1/button1.svelte";
 import RenameRuleSelector from
     "@/components/rename-rule-selector/rename-rule-selector.svelte";
 import {getItemsData,getDefaultOutputDir} from "@/api/bridge-api";
+import _ from "lodash";
 
+// currently selected output dir
 var outputDirText:string="";
 
+var itemsdata:ItemsData={
+    fileItemsData:{},
+    fileGroups:[],
+};
+
+// load items data, set output dir to default output dir
 onMount(async ()=>{
-    console.log(getItemsData());
+    itemsdata=await getItemsData();
 
     outputDirText=await getDefaultOutputDir();
 });
@@ -44,10 +52,12 @@ function h_backButton():void
 
     <div class="rename-rules">
         <div class="rule-contain">
-            <RenameRuleSelector titleText="Groups Rename Rule" itemCountText="Groups"/>
+            <RenameRuleSelector titleText="Groups Rename Rule" itemCountText="Groups"
+                itemCount={itemsdata.fileGroups.length}/>
         </div>
         <div class="rule-contain">
-            <RenameRuleSelector titleText="Items Rename Rule" itemCountText="Items"/>
+            <RenameRuleSelector titleText="Items Rename Rule" itemCountText="Items"
+                itemCount={_.size(itemsdata.fileItemsData)}/>
         </div>
     </div>
 
