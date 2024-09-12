@@ -158,7 +158,7 @@
     selectedFileItemsOrdered=[];
   }
 
-  /** add all target items to a new group */
+  /** add all target items to a new group. still need to add it to item tracking dict */
   function addItemsToNewGroup(items:string[]):void
   {
     addItemsToItemsData(items);
@@ -242,6 +242,13 @@
     fileGroups=newGroups;
   }
 
+  /** add list of new items to a new group and track them */
+  function addNewItemsToNewGroup(items:string[]):void
+  {
+    addItemsToNewGroup(items);
+    addItemsToItemsData(items);
+  }
+
 
 
   // --- handlers
@@ -284,6 +291,17 @@
       fileGroups,
     });
     window.location.href="rename-page.html";
+  }
+
+  /** dropped items into new group zone. if there are any items, add them to a new group.
+   *  if not, add the dragged item into new group. if the dragged item is selected, add
+   *  all selected items into a new group */
+  function h_dropInGroupZone(e:CustomEvent<string[]>):void
+  {
+    if (e.detail.length)
+    {
+      addNewItemsToNewGroup(e.detail);
+    }
   }
 
 
@@ -418,7 +436,7 @@
       <DragProxy selectedCount={selectedFileItemsOrdered.length} on:dragstart={h_dragProxyStart}/>
     </div>
     <div class="new-group-drop-zone-zone">
-      <NewGroupDropZone on:click={h_groupZoneClick}/>
+      <NewGroupDropZone on:click={h_groupZoneClick} on:drop={h_dropInGroupZone}/>
     </div>
     <div class="rename-button-zone">
       <Button1 text="Rename" on:click={h_renameButtonClick}/>
