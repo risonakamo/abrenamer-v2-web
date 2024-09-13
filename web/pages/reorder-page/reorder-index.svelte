@@ -88,12 +88,7 @@
     }
 
     // check if the item being dragged is one of the selected items
-    const dragItemIsSelected:boolean=_.some(
-      selectedFileItemsOrdered,
-      (item:string):boolean=>{
-        return item==draggedItem;
-      }
-    );
+    const dragItemIsSelected:boolean=itemIsSelected(draggedItem);
 
     // determine the items that are about to be moved. if the dragged item is selected,
     // move all the selected items. otherwise, just move the single dragged item
@@ -249,6 +244,19 @@
     addItemsToItemsData(items);
   }
 
+  /** check if target item is one of the selected items */
+  function itemIsSelected(item:string):boolean
+  {
+    return _.some(
+      selectedFileItemsOrdered,
+      (selecteditem:string):boolean=>{
+        return selecteditem==item;
+      }
+    );
+  }
+
+
+
 
 
   // --- handlers
@@ -298,9 +306,27 @@
    *  all selected items into a new group */
   function h_dropInGroupZone(e:CustomEvent<string[]>):void
   {
+    // if new items, create new group and place in new items
     if (e.detail.length)
     {
       addNewItemsToNewGroup(e.detail);
+    }
+
+    else if (draggedItem)
+    {
+      const draggedItemSelected:boolean=itemIsSelected(draggedItem);
+
+      // if dragged item is one of the selected items
+      if (draggedItemSelected)
+      {
+        newGroupFromSelectedItems();
+      }
+
+      // otherwise, dragged an unselected item into the zone
+      else
+      {
+        addItemsToNewGroup([draggedItem]);
+      }
     }
   }
 
