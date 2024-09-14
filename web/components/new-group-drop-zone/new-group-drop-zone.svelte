@@ -11,14 +11,18 @@
   // disable the drop zone because there are no items to form a new group from.
   export var disabledNoItems:boolean=false;
 
+  var dragCounter:number=0;
+
   // appearance when dragged over
-  export var draggedOver:boolean=false;
+  var draggedOver:boolean=false;
+  $: draggedOver=dragCounter>0;
 
   /** dropped on group zone. if have external fileitems, trigger event with the items.
    *  otherwise list is empty - might have triggered with dragging in internal items */
   function h_drop(e:DragEvent):void
   {
     e.preventDefault();
+    dragCounter=0;
 
     if (e.dataTransfer?.files)
     {
@@ -30,6 +34,22 @@
       dispatch("drop",[]);
     }
   }
+
+  function h_dragEnter(e:DragEvent):void
+  {
+    e.stopPropagation();
+    dragCounter++;
+  }
+
+  function h_dragOut():void
+  {
+    dragCounter--;
+  }
+
+  function h_dragEnd():void
+  {
+    dragCounter=0;
+  }
 </script>
 
 <style lang="sass">
@@ -38,7 +58,8 @@
 
 <div class="new-group-drop-zone" class:no-items-disabled={disabledNoItems}
   class:drag-over={draggedOver && !disabledNoItems} on:drop={h_drop}
-  on:dragover|preventDefault on:click
+  on:dragover|preventDefault on:click on:dragenter={h_dragEnter} on:dragleave={h_dragOut}
+  on:dragend={h_dragEnd}
 >
   {#if !disabledNoItems}
     <p>+ new group</p>
