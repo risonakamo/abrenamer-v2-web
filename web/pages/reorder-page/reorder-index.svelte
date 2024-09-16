@@ -13,6 +13,7 @@
   import InitialDropZone from "@/components/initial-drop-zone/initial-drop-zone.svelte";
   import Button1 from "@/components/button1/button1.svelte";
   import {getItemsData, setItemsData} from "@/api/bridge-api";
+  import DropZone2 from "@/components/drop-zone2/drop-zone2.svelte";
 
   /** load data from localstorage */
   onMount(async ()=>{
@@ -462,7 +463,11 @@
       <DragProxy selectedCount={selectedFileItemsOrdered.length} on:dragstart={h_dragProxyStart}/>
     </div>
     <div class="new-group-drop-zone-zone">
-      <NewGroupDropZone on:click={h_groupZoneClick} on:drop={h_dropInGroupZone}/>
+      <NewGroupDropZone on:click={h_groupZoneClick} on:drop={h_dropInGroupZone}
+        disabledNoItems={!selectedFileItemsOrdered.length}/>
+      <DropZone2>
+        <p slot="active">Remove Items</p>
+      </DropZone2>
     </div>
     <div class="rename-button-zone">
       <Button1 text="Rename" on:click={h_renameButtonClick}/>
