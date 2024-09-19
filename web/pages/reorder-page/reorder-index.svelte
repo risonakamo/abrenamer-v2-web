@@ -6,8 +6,9 @@
 
   import ImageTile from "@/components/image-tile/image-tile.svelte";
   import NewGroupDropZone from "@/components/new-group-drop-zone/new-group-drop-zone.svelte";
-  import FileItemGroupContainer from "@/components/file-item-group-container/file-item-group-container.svelte";
-  import {moveItemsAfter, moveItemsIntoGroup} from "@/lib/file-group";
+  import FileItemGroupContainer
+    from "@/components/file-item-group-container/file-item-group-container.svelte";
+  import {moveItemsAfter, moveItemsIntoGroup, purgeItemsFromGroups} from "@/lib/file-group";
   import DragProxy from "@/components/drag-proxy/drag-proxy.svelte";
   import {filesListToPathList, isImage,normalisePaths} from "@/lib/path-lib";
   import InitialDropZone from "@/components/initial-drop-zone/initial-drop-zone.svelte";
@@ -256,6 +257,24 @@
     );
   }
 
+  /** delete the selected items from all states */
+  function deleteItems(items:string[]):void
+  {
+    const itemsSet:Set<string>=new Set(...items);
+
+    const newgroups:FileItemGroup[]=purgeItemsFromGroups(
+      fileGroups,
+      items,
+    );
+
+    const newItems:FileItemDataDict=_.omitBy(fileItemsData,(__,itemPath:string):boolean=>{
+      return itemsSet.has(itemPath);
+    });
+
+    fileItemsData=newItems;
+    fileGroups=newgroups;
+  }
+
 
 
 
@@ -329,6 +348,13 @@
         addItemsToNewGroup([draggedItem]);
       }
     }
+  }
+
+  /** clicked remove zone. remove the currently selected items. unselects all items */
+  function h_removeZoneClick():void
+  {
+    deleteItems(selectedFileItemsOrdered);
+    selectedFileItemsOrdered=[];
   }
 
 
@@ -465,7 +491,7 @@
     <div class="new-group-drop-zone-zone">
       <NewGroupDropZone on:click={h_groupZoneClick} on:drop={h_dropInGroupZone}
         disabledNoItems={!selectedFileItemsOrdered.length}/>
-      <DropZone2>
+      <DropZone2 on:click={h_removeZoneClick}>
         <p slot="active">Remove Items</p>
       </DropZone2>
     </div>

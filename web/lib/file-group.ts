@@ -135,7 +135,7 @@ export function moveItemsIntoGroup(
 }
 
 /** purge list of items from a groups array */
-function purgeItemsFromGroups(
+export function purgeItemsFromGroups(
     groups:FileItemGroup[],
     items:string[],
 ):FileItemGroup[]
