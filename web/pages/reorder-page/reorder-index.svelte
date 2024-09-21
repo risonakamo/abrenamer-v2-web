@@ -489,10 +489,10 @@
       <DragProxy selectedCount={selectedFileItemsOrdered.length} on:dragstart={h_dragProxyStart}/>
     </div>
     <div class="new-group-drop-zone-zone">
-      <NewGroupDropZone on:click={h_groupZoneClick} on:drop={h_dropInGroupZone}
-        disabledNoItems={!selectedFileItemsOrdered.length}/>
+      <NewGroupDropZone on:click={h_groupZoneClick} on:drop={h_dropInGroupZone}/>
       <DropZone2 on:click={h_removeZoneClick}>
         <p slot="active">Remove Items</p>
+        <p slot="disabled">No Items To Remove</p>
       </DropZone2>
     </div>
     <div class="rename-button-zone">
