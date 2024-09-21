@@ -107,7 +107,7 @@
 
 <div class="image-tile" on:dragenter={h_dragEnter} on:dragleave={h_dragOut}
   on:click on:dragstart on:drop={h_drop} on:dragover|preventDefault
-  on:dragend|preventDefault={h_dragend}
+  on:dragend|preventDefault={h_dragend} on:contextmenu|preventDefault
 >
   <div class="img-contain" class:selected={actualSelected} class:drag-over={dragOver}
     draggable={true}

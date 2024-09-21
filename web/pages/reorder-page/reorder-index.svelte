@@ -15,6 +15,7 @@ import InitialDropZone from "@/components/initial-drop-zone/initial-drop-zone.sv
 import Button1 from "@/components/button1/button1.svelte";
 import {getItemsData, setItemsData} from "@/api/bridge-api";
 import DropZone2 from "@/components/drop-zone2/drop-zone2.svelte";
+import PreviewOverlay from "@/components/preview-overlay/preview-overlay.svelte";
 
 /** load data from localstorage */
 onMount(async ()=>{
@@ -36,6 +37,10 @@ var fileGroups:FileItemGroup[]=[];
 
 // item currently being dragged. the string is the full filepath of the item (uniquely identifying it)
 var draggedItem:string|undefined=undefined;
+
+var previewOverlayShowing:boolean=false;
+
+var previewOverlayImg:string|undefined=undefined;
 
 
 
@@ -471,6 +476,13 @@ $: {
           );
         }
 
+        /** right clicked on a tile. open the preview to this tile's item */
+        function h_tileRClick():void
+        {
+          previewOverlayImg=filepath;
+          previewOverlayShowing=true;
+        }
+
         // image path is set to the filepath if the item is an img
         var imagePath:string|undefined=undefined;
 
@@ -492,7 +504,8 @@ $: {
           selectedCount:selectedItemIndex+1,
           onClick:h_tileClick,
           onDragStart:h_tileDragStart,
-          onDrop:h_tileDrop
+          onDrop:h_tileDrop,
+          onRClick:h_tileRClick,
         };
       })
     };
@@ -509,6 +522,10 @@ $: showInitialDropZone=_.size(fileItemsData)==0;
 </style>
 
 <main>
+  {#if previewOverlayShowing}
+    <PreviewOverlay imgSrc={previewOverlayImg}/>
+  {/if}
+
   <div class="top-zone">
     <div class="drag-handler-zone">
       <DragProxy selectedCount={selectedFileItemsOrdered.length} on:dragstart={h_dragProxyStart}/>
@@ -536,7 +553,7 @@ $: showInitialDropZone=_.size(fileItemsData)==0;
           <ImageTile imgSrc={item.imagePath} fileName={item.filename}
             fileType={item.filetype} selected={item.selected} on:click={item.onClick}
             selectedCount={item.selectedCount} on:dragstart={item.onDragStart}
-            on:drop={item.onDrop}
+            on:drop={item.onDrop} on:contextmenu={item.onRClick}
           />
         {/each}
         </FileItemGroupContainer>
