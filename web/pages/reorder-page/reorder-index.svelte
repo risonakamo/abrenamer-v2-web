@@ -357,6 +357,31 @@ function h_removeZoneClick():void
   selectedFileItemsOrdered=[];
 }
 
+/** dropped in delete zone. remove the currently dragged item, or, if the dragged item is selected
+ *  remove all the selected items. */
+function h_dropDeleteZone():void
+{
+    if (!draggedItem)
+    {
+        return;
+    }
+
+    const draggedItemSelected:boolean=itemIsSelected(draggedItem);
+
+    // if item is not selected and is alone, delete just the dragged item
+    if (!draggedItemSelected)
+    {
+        deleteItems([draggedItem]);
+        draggedItem=undefined;
+    }
+
+    // if dragged item is selected, do the same thing as remove zone click
+    else
+    {
+        h_removeZoneClick();
+    }
+}
+
 
 
 
@@ -490,7 +515,7 @@ $: showInitialDropZone=_.size(fileItemsData)==0;
     </div>
     <div class="new-group-drop-zone-zone">
       <NewGroupDropZone on:click={h_groupZoneClick} on:drop={h_dropInGroupZone}/>
-      <DropZone2 on:click={h_removeZoneClick}>
+      <DropZone2 on:click={h_removeZoneClick} on:drop={h_dropDeleteZone}>
         <p slot="active">Remove Items</p>
         <p slot="disabled">No Items To Remove</p>
       </DropZone2>
