@@ -1,11 +1,51 @@
 <script lang="ts">
-export var imgSrc:string|undefined=undefined;
-export var imgCounterNum:number=0;
-export var imgCounterMax:number=0;
+import {createEventDispatcher,onMount} from "svelte";
 
+const dispatch=createEventDispatcher<{
+    /** requesting to close overlay */
+    close:void
+}>();
+
+/** immediately focus on spawn */
+onMount(()=>{
+    ref.focus();
+});
+
+/** the file groups states from parent */
+export var fileGroups:FileItemGroup[]=[];
+
+/** 2WAY. the current image showing in the overlay */
+export var currentImg:string|undefined=undefined;
+
+var imgCounterGroupCurrent:number=0;
+var imgCounterGroupMax:number=0;
+var imgCounterAllCurrent:number=0;
+var imgCounterAllMax:number=0;
+
+/** element ref */
+var ref:HTMLDivElement;
+
+/** overlay key controls */
 function h_keyControl(e:KeyboardEvent):void
 {
+    const key:string=e.key.toLowerCase();
 
+    // neutral control layer
+    if (!e.ctrlKey && !e.shiftKey && !e.altKey)
+    {
+        switch (key)
+        {
+            case "arrowright":
+            break;
+
+            case "arrowleft":
+            break;
+
+            case "escape":
+            dispatch("close");
+            break;
+        }
+    }
 }
 </script>
 
@@ -13,12 +53,12 @@ function h_keyControl(e:KeyboardEvent):void
     @import "./preview-overlay.sass"
 </style>
 
-<div class="preview-overlay" on:keypress={h_keyControl}>
+<div class="preview-overlay" on:keydown={h_keyControl} tabindex="0" bind:this={ref}>
     <div class="img-counter">
-        {imgCounterNum}/{imgCounterMax}
+        {imgCounterGroupCurrent}/{imgCounterGroupMax}
     </div>
 
     <div class="img-contain">
-        <img src={imgSrc} alt="error"/>
+        <img src={currentImg} alt="error"/>
     </div>
 </div>

@@ -152,3 +152,16 @@ export function purgeItemsFromGroups(
         };
     });
 }
+
+/** try to find the item that is a certain offset from a target item in the filegroups.
+ *  for example, offset +1 would be the item immediately after the selected item.
+ *  if the item is at the end or beginning, then returns the same item.
+ *  returns the same item if the item was not findable in the groups list */
+export function findItemOffset(
+    groups:FileItemGroup[],
+    item:string,
+    offset:number
+):string
+{
+
+}

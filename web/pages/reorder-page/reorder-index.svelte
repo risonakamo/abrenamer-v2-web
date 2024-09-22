@@ -44,7 +44,7 @@ var previewOverlayImg:string|undefined=undefined;
 
 
 
-// --- state control
+// --- funcs
 /** toggle selected state of a target filepath. removes or adds to selected items array*/
 function toggleSelectedItem(filepath:string):void
 {
@@ -284,6 +284,7 @@ function deleteItems(items:string[]):void
 
 
 
+
 // --- handlers
 /** clicked on the group zone. move all selected items into a new group */
 function h_groupZoneClick():void
@@ -386,6 +387,13 @@ function h_dropDeleteZone():void
         h_removeZoneClick();
     }
 }
+
+/** preview overlay triggered close event */
+function h_overlayClose():void
+{
+  previewOverlayShowing=false;
+}
+
 
 
 
@@ -523,7 +531,7 @@ $: showInitialDropZone=_.size(fileItemsData)==0;
 
 <main>
   {#if previewOverlayShowing}
-    <PreviewOverlay imgSrc={previewOverlayImg}/>
+    <PreviewOverlay bind:currentImg={previewOverlayImg} on:close={h_overlayClose}/>
   {/if}
 
   <div class="top-zone">
