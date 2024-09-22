@@ -154,14 +154,41 @@ export function purgeItemsFromGroups(
 }
 
 /** try to find the item that is a certain offset from a target item in the filegroups.
- *  for example, offset +1 would be the item immediately after the selected item.
+ *  for example, offset +1 would be the item immediately after the target item.
  *  if the item is at the end or beginning, then returns the same item.
  *  returns the same item if the item was not findable in the groups list */
-export function findItemOffset(
+export function findNextItem(
     groups:FileItemGroup[],
-    item:string,
+    findItem:string,
     offset:number
 ):string
 {
+    const items:string[]=flattenGroups(groups);
 
+    const findItemI:number=_.findIndex(items,(item:string):boolean=>{
+        return item==findItem;
+    });
+
+    if (findItemI<0)
+    {
+        console.error("could not find target item",findItem);
+        return findItem;
+    }
+
+    const offsetIndex:number=findItemI+offset;
+
+    if (offsetIndex<0 || offsetIndex>=items.length)
+    {
+        return findItem;
+    }
+
+    return items[offsetIndex];
+}
+
+/** flatten file item groups into flat list of just the item paths */
+function flattenGroups(groups:FileItemGroup[]):string[]
+{
+    return _.flatMap(groups,(group:FileItemGroup):string[]=>{
+        return group.items;
+    });
 }

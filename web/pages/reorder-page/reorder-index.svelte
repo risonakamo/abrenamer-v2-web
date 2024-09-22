@@ -531,7 +531,8 @@ $: showInitialDropZone=_.size(fileItemsData)==0;
 
 <main>
   {#if previewOverlayShowing}
-    <PreviewOverlay bind:currentImg={previewOverlayImg} on:close={h_overlayClose}/>
+    <PreviewOverlay bind:currentImg={previewOverlayImg} on:close={h_overlayClose}
+      fileGroups={fileGroups}/>
   {/if}
 
   <div class="top-zone">

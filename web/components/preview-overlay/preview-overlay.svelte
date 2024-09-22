@@ -1,6 +1,8 @@
 <script lang="ts">
 import {createEventDispatcher,onMount} from "svelte";
 
+import {findNextItem} from "@/lib/file-group";
+
 const dispatch=createEventDispatcher<{
     /** requesting to close overlay */
     close:void
@@ -25,6 +27,21 @@ var imgCounterAllMax:number=0;
 /** element ref */
 var ref:HTMLDivElement;
 
+/** navigate the current image */
+function itemNavigate(offset:number):void
+{
+    if (!currentImg)
+    {
+        return;
+    }
+
+    currentImg=findNextItem(
+        fileGroups,
+        currentImg,
+        offset,
+    );
+}
+
 /** overlay key controls */
 function h_keyControl(e:KeyboardEvent):void
 {
@@ -35,10 +52,14 @@ function h_keyControl(e:KeyboardEvent):void
     {
         switch (key)
         {
+            case "d":
             case "arrowright":
+            itemNavigate(1);
             break;
 
+            case "a":
             case "arrowleft":
+            itemNavigate(-1);
             break;
 
             case "escape":
