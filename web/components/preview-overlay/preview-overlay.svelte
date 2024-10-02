@@ -102,7 +102,12 @@ $: {
 
 <div class="preview-overlay" on:keydown={h_keyControl} tabindex="0" bind:this={ref}>
     <div class="img-counter">
-        {imgCounterGroupCurrent}/{imgCounterGroupMax}
+        <div class="big-count">
+            {imgCounterAllCurrent}/{imgCounterAllMax}
+        </div>
+        <div class="small-count">
+            {imgCounterGroupCurrent}/{imgCounterGroupMax}
+        </div>
     </div>
 
     <div class="img-contain">
