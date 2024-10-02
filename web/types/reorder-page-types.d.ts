@@ -47,3 +47,20 @@ interface RenderedFileGroup
     items:RenderedFileItem[]
     onDrop(e:CustomEvent<DragEvent>):void
 }
+
+/** position of an item within a FileItemGroup[] */
+interface FileItemPosition
+{
+    // position of the item relative to groups as
+    // if all groups were flattened
+    overallPosition:number
+
+    // position of the item relative to it's current group
+    localPosition:number
+
+    // total number of all items
+    totalItems:number
+
+    // total number of local items
+    totalLocalItems:number
+}

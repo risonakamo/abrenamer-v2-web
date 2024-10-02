@@ -192,3 +192,43 @@ function flattenGroups(groups:FileItemGroup[]):string[]
         return group.items;
     });
 }
+
+/** get positional information of a target item within a group.
+ *  the position fields are +1 index. first item is 1, not 0 */
+export function findItemPosition(findItem:string,groups:FileItemGroup[]):FileItemPosition|null
+{
+    const totalItems:number=flattenGroups(groups).length;
+
+    // tracks how many items we have gone through. once we enounter the target item, this
+    // number is the overall position of that item
+    var itemCount:number=0;
+
+    // loop through all groups and items within groups
+    for (let groupI=0;groupI<groups.length;groupI++)
+    {
+        const group:FileItemGroup=groups[groupI];
+
+        // tracks the position of the target item within local group
+        var localItemCount:number=0;
+
+        for (let itemI=0;itemI<group.items.length;itemI++)
+        {
+            itemCount++;
+            localItemCount++;
+            const item:string=group.items[itemI];
+
+            if (item==findItem)
+            {
+                return {
+                    overallPosition:itemCount,
+                    localPosition:localItemCount,
+                    totalItems,
+                    totalLocalItems:group.items.length,
+                };
+            }
+        }
+    }
+
+    console.error("could not find item:",findItem);
+    return null;
+}

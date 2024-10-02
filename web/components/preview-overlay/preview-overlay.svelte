@@ -1,7 +1,7 @@
 <script lang="ts">
 import {createEventDispatcher,onMount} from "svelte";
 
-import {findNextItem} from "@/lib/file-group";
+import {findItemPosition, findNextItem} from "@/lib/file-group";
 
 const dispatch=createEventDispatcher<{
     /** requesting to close overlay */
@@ -65,6 +65,32 @@ function h_keyControl(e:KeyboardEvent):void
             case "escape":
             dispatch("close");
             break;
+        }
+    }
+}
+
+// on current image change, recalculate position values
+$: {
+    if (currentImg)
+    {
+        const filePos:FileItemPosition|null=findItemPosition(currentImg,fileGroups);
+
+        if (!filePos)
+        {
+            console.error("could not get file position");
+
+            imgCounterGroupCurrent=-1;
+            imgCounterGroupMax=-1;
+            imgCounterAllCurrent=-1;
+            imgCounterAllMax=-1;
+        }
+
+        else
+        {
+            imgCounterGroupCurrent=filePos.localPosition;
+            imgCounterGroupMax=filePos.totalLocalItems;
+            imgCounterAllCurrent=filePos.overallPosition;
+            imgCounterAllMax=filePos.totalItems;
         }
     }
 }
