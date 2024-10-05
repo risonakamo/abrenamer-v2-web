@@ -19,13 +19,20 @@ export var fileGroups:FileItemGroup[]=[];
 /** 2WAY. the current image showing in the overlay */
 export var currentImg:string|undefined=undefined;
 
+/** counter indicator states */
 var imgCounterGroupCurrent:number=0;
 var imgCounterGroupMax:number=0;
 var imgCounterAllCurrent:number=0;
 var imgCounterAllMax:number=0;
 
-/** element ref */
+// if false, tall fits instead
+var imgWideFit:boolean=false;
+
+/** self element ref */
 var ref:HTMLDivElement;
+
+/** ref to the img displaying element */
+var imgRef:HTMLImageElement;
 
 /** navigate the current image */
 function itemNavigate(offset:number):void
@@ -66,6 +73,21 @@ function h_keyControl(e:KeyboardEvent):void
             dispatch("close");
             break;
         }
+    }
+}
+
+/** refit img on load */
+function h_imgLoaded():void
+{
+    // wide fit occurs when window's ratio is less than img's ratio
+    if (window.innerWidth/window.innerHeight<imgRef.naturalWidth/imgRef.naturalHeight)
+    {
+        imgWideFit=true;
+    }
+
+    else
+    {
+        imgWideFit=false;
     }
 }
 
@@ -111,6 +133,7 @@ $: {
     </div>
 
     <div class="img-contain">
-        <img src={currentImg} alt="error"/>
+        <img src={currentImg} alt="error" class:wide-fit={imgWideFit} on:load={h_imgLoaded}
+            bind:this={imgRef}/>
     </div>
 </div>
