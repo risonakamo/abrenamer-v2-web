@@ -137,3 +137,5 @@ $: {
             bind:this={imgRef}/>
     </div>
 </div>
+
+<svelte:window on:resize={h_imgLoaded}/>
