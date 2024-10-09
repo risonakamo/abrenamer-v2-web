@@ -133,7 +133,7 @@ $: {
     </div>
 
     <div class="img-contain">
-        <img src={currentImg} alt="error" class:wide-fit={imgWideFit} on:load={h_imgLoaded}
+        <img src={currentImg} alt="error: no preview available" class:wide-fit={imgWideFit} on:load={h_imgLoaded}
             bind:this={imgRef}/>
     </div>
 </div>
