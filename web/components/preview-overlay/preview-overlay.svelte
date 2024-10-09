@@ -91,6 +91,12 @@ function h_imgLoaded():void
     }
 }
 
+/** right clicked the overlay. trigger close */
+function h_rightClick():void
+{
+    dispatch("close");
+}
+
 // on current image change, recalculate position values
 $: {
     if (currentImg)
@@ -122,7 +128,7 @@ $: {
     @import "./preview-overlay.sass"
 </style>
 
-<div class="preview-overlay" on:keydown={h_keyControl} tabindex="0" bind:this={ref}>
+<div class="preview-overlay" on:keydown={h_keyControl} tabindex="0" bind:this={ref} on:contextmenu={h_rightClick}>
     <div class="img-counter">
         <div class="big-count">
             {imgCounterAllCurrent}/{imgCounterAllMax}
