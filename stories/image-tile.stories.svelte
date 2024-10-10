@@ -58,3 +58,17 @@
   fileName:"wide1.jpeg",
   dragOver:true
 }}/>
+
+<Story name="marked" args={{
+  imgSrc:Wide1,
+  fileName:"wide1.jpeg",
+  marked:true
+}}/>
+
+<Story name="marked selected" args={{
+  imgSrc:Wide1,
+  fileName:"wide1.jpeg",
+  marked:true,
+  selected:true,
+  selectedCount:10,
+}}/>

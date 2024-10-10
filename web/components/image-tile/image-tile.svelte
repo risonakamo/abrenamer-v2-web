@@ -20,6 +20,8 @@
   export var selected:boolean=false;
   export var selectedCount:number=-1;
 
+  export var marked:boolean=false;
+
 
 
 
@@ -110,7 +112,7 @@
   on:dragend|preventDefault={h_dragend} on:contextmenu|preventDefault
 >
   <div class="img-contain" class:selected={actualSelected} class:drag-over={dragOver}
-    draggable={true}
+    draggable={true} class:marked={marked}
   >
     <div class="selected-overlay overlay">
       <p>{selectedCount}</p>

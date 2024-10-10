@@ -22,6 +22,7 @@ interface RenderedFileItem extends FileItemData
 {
     selected:boolean
     selectedCount:number
+    marked:boolean
 
     // this should not be filled out if the item is not an image
     imagePath:string|undefined

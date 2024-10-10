@@ -38,8 +38,10 @@ var fileGroups:FileItemGroup[]=[];
 // item currently being dragged. the string is the full filepath of the item (uniquely identifying it)
 var draggedItem:string|undefined=undefined;
 
+// is the preview overlay showing or not
 var previewOverlayShowing:boolean=false;
 
+// the img that is currently being previewed
 var previewOverlayImg:string|undefined=undefined;
 
 
@@ -505,6 +507,8 @@ $: {
 
         const selected:boolean=selectedItemIndex>=0;
 
+        const itemIsBeingPreviewed:boolean=filepath==previewOverlayImg;
+
         return {
           ...item,
           imagePath,
@@ -514,6 +518,7 @@ $: {
           onDragStart:h_tileDragStart,
           onDrop:h_tileDrop,
           onRClick:h_tileRClick,
+          marked:itemIsBeingPreviewed,
         };
       })
     };
@@ -562,7 +567,7 @@ $: showInitialDropZone=_.size(fileItemsData)==0;
           <ImageTile imgSrc={item.imagePath} fileName={item.filename}
             fileType={item.filetype} selected={item.selected} on:click={item.onClick}
             selectedCount={item.selectedCount} on:dragstart={item.onDragStart}
-            on:drop={item.onDrop} on:contextmenu={item.onRClick}
+            on:drop={item.onDrop} on:contextmenu={item.onRClick} marked={item.marked}
           />
         {/each}
         </FileItemGroupContainer>
