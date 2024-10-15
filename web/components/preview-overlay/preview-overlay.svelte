@@ -5,7 +5,9 @@ import {findItemPosition, findNextItem} from "@/lib/file-group";
 
 const dispatch=createEventDispatcher<{
     /** requesting to close overlay */
-    close:void
+    close:void,
+    /** triggers whenever navigation occurs */
+    navigated:void
 }>();
 
 /** immediately focus on spawn */
@@ -62,11 +64,13 @@ function h_keyControl(e:KeyboardEvent):void
             case "d":
             case "arrowright":
             itemNavigate(1);
+            dispatch("navigated");
             break;
 
             case "a":
             case "arrowleft":
             itemNavigate(-1);
+            dispatch("navigated");
             break;
 
             case "escape":

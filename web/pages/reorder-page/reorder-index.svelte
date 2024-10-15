@@ -44,6 +44,9 @@ var previewOverlayShowing:boolean=false;
 // the img that is currently being previewed
 var previewOverlayImg:string|undefined=undefined;
 
+// enable scrolling to the marked tile
+var focusMarked:boolean=false;
+
 
 
 // --- funcs
@@ -396,6 +399,12 @@ function h_overlayClose():void
   previewOverlayShowing=false;
 }
 
+/** on performing navigate with overlay, set focus marked so tile gets focused */
+function h_overlayNavigated():void
+{
+  focusMarked=true;
+}
+
 
 
 
@@ -537,7 +546,7 @@ $: showInitialDropZone=_.size(fileItemsData)==0;
 <main>
   {#if previewOverlayShowing}
     <PreviewOverlay bind:currentImg={previewOverlayImg} on:close={h_overlayClose}
-      fileGroups={fileGroups}/>
+      fileGroups={fileGroups} on:navigated={h_overlayNavigated}/>
   {/if}
 
   <div class="top-zone">
@@ -568,6 +577,7 @@ $: showInitialDropZone=_.size(fileItemsData)==0;
             fileType={item.filetype} selected={item.selected} on:click={item.onClick}
             selectedCount={item.selectedCount} on:dragstart={item.onDragStart}
             on:drop={item.onDrop} on:contextmenu={item.onRClick} marked={item.marked}
+            bind:focusMarked={focusMarked}
           />
         {/each}
         </FileItemGroupContainer>

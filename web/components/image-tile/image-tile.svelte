@@ -21,7 +21,9 @@
   export var selectedCount:number=-1;
 
   export var marked:boolean=false;
-
+  // if true, upon marked changing to true, scrolls into view.
+  // 2way - will reset to false on performing the scroll.
+  export var focusMarked:boolean=true;
 
 
 
@@ -105,9 +107,10 @@
   }
 
   $: {
-    if (marked)
+    if (marked && ref && focusMarked)
     {
       ref.scrollIntoView({block:"nearest"});
+      focusMarked=false;
     }
   }
 </script>
