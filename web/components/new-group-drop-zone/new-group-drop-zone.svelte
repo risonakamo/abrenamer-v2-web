@@ -1,8 +1,9 @@
 <script lang="ts">
   /** a drop zone that can be clicked on */
 
-  import {filesListToPathList} from "@/lib/path-lib";
   import {createEventDispatcher} from "svelte";
+  import {SquareDashed} from "lucide-svelte";
+  import {filesListToPathList} from "@/lib/path-lib";
 
   const dispatch=createEventDispatcher<{
     drop:string[],
@@ -62,6 +63,7 @@
   on:dragend={h_dragEnd}
 >
   {#if !disabledNoItems}
+    <p><SquareDashed/></p>
     <p>+ new group</p>
   {:else}
     <p>No Items Selected</p>

@@ -16,6 +16,7 @@ import Button1 from "@/components/button1/button1.svelte";
 import {getItemsData, setItemsData} from "@/api/bridge-api";
 import DropZone2 from "@/components/drop-zone2/drop-zone2.svelte";
 import PreviewOverlay from "@/components/preview-overlay/preview-overlay.svelte";
+import {Trash} from "lucide-svelte";
 
 /** load data from localstorage */
 onMount(async ()=>{
@@ -556,7 +557,10 @@ $: showInitialDropZone=_.size(fileItemsData)==0;
     <div class="new-group-drop-zone-zone">
       <NewGroupDropZone on:click={h_groupZoneClick} on:drop={h_dropInGroupZone}/>
       <DropZone2 on:click={h_removeZoneClick} on:drop={h_dropDeleteZone}>
-        <p slot="active">Remove Items</p>
+        <div slot="active" class="dropzone-container">
+          <p><Trash/></p>
+          <p>Remove Items</p>
+        </div>
         <p slot="disabled">No Items To Remove</p>
       </DropZone2>
     </div>
