@@ -197,11 +197,14 @@ function addItemsToItemsData(paths:string[]):void
   {
     const item:string=normalise(paths[itemI]);
 
+    const filetype:string=extname(item);
+
     newFileItemsData[item]={
       filepath:item,
       filename:basename(item),
-      filetype:extname(item),
+      filetype,
       isImage:isImage(item),
+      isFolder:filetype.length==0,
     };
   }
 
@@ -581,7 +584,7 @@ $: showInitialDropZone=_.size(fileItemsData)==0;
             fileType={item.filetype} selected={item.selected} on:click={item.onClick}
             selectedCount={item.selectedCount} on:dragstart={item.onDragStart}
             on:drop={item.onDrop} on:contextmenu={item.onRClick} marked={item.marked}
-            bind:focusMarked={focusMarked}
+            bind:focusMarked={focusMarked} folder={item.isFolder}
           />
         {/each}
         </FileItemGroupContainer>

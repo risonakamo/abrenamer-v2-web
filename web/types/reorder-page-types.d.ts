@@ -12,6 +12,7 @@ interface FileItemData
     filepath:string
 
     isImage:boolean
+    isFolder:boolean
 
     filename:string
     filetype:string

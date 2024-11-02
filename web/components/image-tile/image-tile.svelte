@@ -3,6 +3,7 @@
    *  an image */
 
   import {createEventDispatcher} from "svelte";
+  import {Folder} from "lucide-svelte";
 
   const dispatch=createEventDispatcher<{
     drop:DragEvent
@@ -15,6 +16,8 @@
   export var fileName:string="missing filename";
   // filetype of item. displayed in place if img src is not provided
   export var fileType:string="???";
+  // if true, shows folder icon instead of preview
+  export var folder:boolean=false;
 
   // set selected state
   export var selected:boolean=false;
@@ -140,6 +143,8 @@
         class:wide-fit={isWide} class:tall-fit={isTall} class:loading={isLoading}
         class:selected={actualSelected} draggable={false}
       />
+    {:else if folder}
+      <Folder/>
     {:else}
       <p class="filetype" class:selected={actualSelected}>{fileType}</p>
     {/if}
