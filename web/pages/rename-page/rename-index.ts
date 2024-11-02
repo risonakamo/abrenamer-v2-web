@@ -1,10 +1,9 @@
+import {mount} from "svelte";
 import RenameIndex from "./rename-index.svelte";
 
 function main():void
 {
-    new RenameIndex({
-        target:document.body
-    });
+    mount(RenameIndex,{target:document.body});
 }
 
 window.onload=main;
