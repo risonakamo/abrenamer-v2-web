@@ -46,7 +46,7 @@ function h_selectedRule():void
 </script>
 
 <style lang="sass">
-    @import "./rename-rule-selector.sass"
+    @use "./rename-rule-selector.sass"
 </style>
 
 <div class="rename-rule-selector">

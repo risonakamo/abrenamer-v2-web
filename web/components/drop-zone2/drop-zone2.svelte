@@ -72,7 +72,7 @@ function h_dragEnd():void
 </script>
 
 <style lang="sass">
-    @import "./drop-zone2.sass"
+    @use "./drop-zone2.sass"
 </style>
 
 <div class="drop-zone2"

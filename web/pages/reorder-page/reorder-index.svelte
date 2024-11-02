@@ -544,7 +544,7 @@ $: showInitialDropZone=_.size(fileItemsData)==0;
 </script>
 
 <style lang="sass">
-  @import "./reorder-index.sass"
+  @use "./reorder-index.sass"
 </style>
 
 <main>

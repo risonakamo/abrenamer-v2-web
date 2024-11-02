@@ -24,7 +24,7 @@
 </script>
 
 <style lang="sass">
-    @import "./initial-drop-zone.sass"
+    @use "./initial-drop-zone.sass"
 </style>
 
 <div class="initial-drop-zone" on:dragenter={h_dragEnter} on:dragleave={h_dragOut}

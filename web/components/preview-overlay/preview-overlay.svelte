@@ -129,7 +129,7 @@ $: {
 </script>
 
 <style lang="sass">
-    @import "./preview-overlay.sass"
+    @use "./preview-overlay.sass"
 </style>
 
 <div class="preview-overlay" on:keydown={h_keyControl} tabindex="0" bind:this={ref} on:contextmenu={h_rightClick}>

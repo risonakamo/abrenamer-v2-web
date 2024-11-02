@@ -9,7 +9,7 @@ $: dragEnabled=selectedCount>0;
 </script>
 
 <style lang="sass">
-    @import "./drag-proxy.sass"
+    @use "./drag-proxy.sass"
 </style>
 
 <div class="drag-proxy" draggable={dragEnabled} class:inactive={!dragEnabled} on:dragstart>

@@ -31,7 +31,7 @@ function h_backButton():void
 </script>
 
 <style lang="sass">
-    @import "./rename-index.sass"
+    @use "./rename-index.sass"
 </style>
 
 <main>

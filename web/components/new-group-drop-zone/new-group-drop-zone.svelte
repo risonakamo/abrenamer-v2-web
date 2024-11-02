@@ -54,7 +54,7 @@
 </script>
 
 <style lang="sass">
-  @import "./new-group-drop-zone.sass"
+  @use "./new-group-drop-zone.sass"
 </style>
 
 <div class="new-group-drop-zone" class:no-items-disabled={disabledNoItems}

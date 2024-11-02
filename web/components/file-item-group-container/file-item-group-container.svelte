@@ -36,7 +36,7 @@
 </script>
 
 <style lang="sass">
-  @import "./file-item-group-container.sass"
+  @use "./file-item-group-container.sass"
 </style>
 
 <div class="file-item-group-container" class:drag-over={draggedOver}

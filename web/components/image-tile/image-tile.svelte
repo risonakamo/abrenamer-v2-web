@@ -119,7 +119,7 @@
 </script>
 
 <style lang="sass">
-  @import "./image-tile.sass"
+  @use "./image-tile.sass"
 </style>
 
 <div class="image-tile" on:dragenter={h_dragEnter} on:dragleave={h_dragOut}

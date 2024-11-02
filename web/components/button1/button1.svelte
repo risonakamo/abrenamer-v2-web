@@ -3,7 +3,7 @@
 </script>
 
 <style lang="sass">
-    @import "./button1.sass"
+    @use "./button1.sass"
 </style>
 
 <div class="button1" on:click>
