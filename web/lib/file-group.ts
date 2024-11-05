@@ -232,3 +232,11 @@ export function findItemPosition(findItem:string,groups:FileItemGroup[]):FileIte
     console.error("could not find item:",findItem);
     return null;
 }
+
+/** return item groups but with all empty groups removed */
+export function purgeEmptyGroups(groups:FileItemGroup[]):FileItemGroup[]
+{
+    return _.reject(groups,(group:FileItemGroup):boolean=>{
+        return group.items.length==0;
+    });
+}

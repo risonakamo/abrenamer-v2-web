@@ -8,7 +8,8 @@ import ImageTile from "@/components/image-tile/image-tile.svelte";
 import NewGroupDropZone from "@/components/new-group-drop-zone/new-group-drop-zone.svelte";
 import FileItemGroupContainer
   from "@/components/file-item-group-container/file-item-group-container.svelte";
-import {moveItemsAfter, moveItemsIntoGroup, purgeItemsFromGroups} from "@/lib/file-group";
+import {moveItemsAfter, moveItemsIntoGroup, purgeEmptyGroups,
+  purgeItemsFromGroups} from "@/lib/file-group";
 import DragProxy from "@/components/drag-proxy/drag-proxy.svelte";
 import {filesListToPathList, isImage,normalisePaths} from "@/lib/path-lib";
 import InitialDropZone from "@/components/initial-drop-zone/initial-drop-zone.svelte";
@@ -120,23 +121,23 @@ function moveDraggeditems(
   // move to single drop target mode
   if (dropTarget!=null)
   {
-    fileGroups=moveItemsAfter(
+    fileGroups=purgeEmptyGroups(moveItemsAfter(
       fileGroups,
       moveTargets,
       dropTarget,
       false
-    );
+    ));
   }
 
   // drop into group mode
   else if (dropGroupIndex!=null)
   {
-    fileGroups=moveItemsIntoGroup(
+    fileGroups=purgeEmptyGroups(moveItemsIntoGroup(
       fileGroups,
       moveTargets,
       dropGroupIndex,
       "front",
-    );
+    ));
   }
 
   else
@@ -286,7 +287,7 @@ function deleteItems(items:string[]):void
   });
 
   fileItemsData=newItems;
-  fileGroups=newgroups;
+  fileGroups=purgeEmptyGroups(newgroups);
 }
 
 
