@@ -275,7 +275,7 @@ function itemIsSelected(item:string):boolean
 /** delete the selected items from all states */
 function deleteItems(items:string[]):void
 {
-  const itemsSet:Set<string>=new Set(...items);
+  const itemsSet:Set<string>=new Set(items);
 
   const newgroups:FileItemGroup[]=purgeItemsFromGroups(
     fileGroups,
