@@ -348,9 +348,10 @@ function h_initialZoneDrop(e:DragEvent):void
 /** clicked rename button. set data into storage, navigate to rename page */
 function h_renameButtonClick():void
 {
+
   setItemsData({
-    fileItemsData,
-    fileGroups,
+    fileItemsData:$state.snapshot(fileItemsData),
+    fileGroups:$state.snapshot(fileGroups),
   });
   window.location.href="rename-page.html";
 }
