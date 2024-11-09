@@ -29,25 +29,25 @@ onMount(async ()=>{
 
 // --- states
 // all file items data in no particular order
-var fileItemsData:FileItemDataDict={};
+var fileItemsData:FileItemDataDict=$state({});
 
 // selected files, in selection order. uses filepath as key
-var selectedFileItemsOrdered:string[]=[];
+var selectedFileItemsOrdered:string[]=$state([]);
 
 // ordering of the items. uses filepath as key
-var fileGroups:FileItemGroup[]=[];
+var fileGroups:FileItemGroup[]=$state([]);
 
 // item currently being dragged. the string is the full filepath of the item (uniquely identifying it)
-var draggedItem:string|undefined=undefined;
+var draggedItem:string|undefined=$state(undefined);
 
 // is the preview overlay showing or not
-var previewOverlayShowing:boolean=false;
+var previewOverlayShowing:boolean=$state(false);
 
 // the img that is currently being previewed
-var previewOverlayImg:string|undefined=undefined;
+var previewOverlayImg:string|undefined=$state(undefined);
 
 // enable scrolling to the marked tile
-var focusMarked:boolean=false;
+var focusMarked:boolean=$state(false);
 
 
 
@@ -418,10 +418,9 @@ function h_overlayNavigated():void
 
 // --- derived
 // construct the rendered file groups which contains the rendered file items
-var renderedFileGroups:RenderedFileGroup[]=[];
-$: {
+var renderedFileGroups:RenderedFileGroup[]=$derived.by(()=>{
   let count:number=0;
-  renderedFileGroups=_.map(fileGroups,(filegroup:FileItemGroup,i:number):RenderedFileGroup=>{
+  return _.map(fileGroups,(filegroup:FileItemGroup,i:number):RenderedFileGroup=>{
     count++;
 
     /** dropped in group.
@@ -537,11 +536,10 @@ $: {
       })
     };
   });
-}
+});
 
 // initial drop zone is shown when there are no items
-var showInitialDropZone:boolean=true;
-$: showInitialDropZone=_.size(fileItemsData)==0;
+var showInitialDropZone:boolean=$derived(_.size(fileItemsData)==0);
 </script>
 
 <style lang="sass">
