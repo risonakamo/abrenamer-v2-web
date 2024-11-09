@@ -49,6 +49,12 @@ var previewOverlayImg:string|undefined=$state(undefined);
 // enable scrolling to the marked tile
 var focusMarked:boolean=$state(false);
 
+// path of the last moved item
+var lastMovedItem:string|undefined=$state(undefined);
+
+// when enabled, scroll to the last moved item. get unset after scroll is complete
+var focusLastMoved:boolean=$state(false);
+
 
 
 // --- funcs
@@ -127,6 +133,9 @@ function moveDraggeditems(
       dropTarget,
       false
     ));
+
+    lastMovedItem=moveTargets[0];
+    focusLastMoved=true;
   }
 
   // drop into group mode
@@ -138,6 +147,9 @@ function moveDraggeditems(
       dropGroupIndex,
       "front",
     ));
+
+    lastMovedItem=moveTargets[0];
+    focusLastMoved=true;
   }
 
   else
@@ -186,6 +198,9 @@ function addItemsToNewGroup(items:string[]):void
     newGroupIndex,
     "front",
   );
+
+  lastMovedItem=items[0];
+  focusLastMoved=true;
 }
 
 /** add all full paths to items data dict */
@@ -252,6 +267,9 @@ function addItems(
   }
 
   fileGroups=newGroups;
+
+  lastMovedItem=newItems[0];
+  focusLastMoved=true;
 }
 
 /** add list of new items to a new group and track them */
@@ -506,6 +524,12 @@ var renderedFileGroups:RenderedFileGroup[]=$derived.by(()=>{
           previewOverlayShowing=true;
         }
 
+        /** focus done. unset the focus last moved */
+        function h_focusOthered():void
+        {
+          focusLastMoved=false;
+        }
+
         // image path is set to the filepath if the item is an img
         var imagePath:string|undefined=undefined;
 
@@ -532,6 +556,8 @@ var renderedFileGroups:RenderedFileGroup[]=$derived.by(()=>{
           onDrop:h_tileDrop,
           onRClick:h_tileRClick,
           marked:itemIsBeingPreviewed,
+          lastItemFocus:focusLastMoved && lastMovedItem==filepath,
+          onFocusOther:h_focusOthered,
         };
       })
     };
@@ -583,7 +609,8 @@ var showInitialDropZone:boolean=$derived(_.size(fileItemsData)==0);
             fileType={item.filetype} selected={item.selected} on:click={item.onClick}
             selectedCount={item.selectedCount} on:dragstart={item.onDragStart}
             on:drop={item.onDrop} on:contextmenu={item.onRClick} marked={item.marked}
-            bind:focusMarked={focusMarked} folder={item.isFolder}
+            bind:focusMarked={focusMarked} folder={item.isFolder} focusOther={item.lastItemFocus}
+            on:focusedOther={item.onFocusOther}
           />
         {/each}
         </FileItemGroupContainer>

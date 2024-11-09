@@ -6,7 +6,8 @@
   import {Folder} from "lucide-svelte";
 
   const dispatch=createEventDispatcher<{
-    drop:DragEvent
+    drop:DragEvent,
+    focusedOther:void,
   }>();
 
   // --- props
@@ -27,6 +28,10 @@
   // if true, upon marked changing to true, scrolls into view.
   // 2way - will reset to false on performing the scroll.
   export var focusMarked:boolean=true;
+
+  // if true, also triggers scroll into view. triggers event but doesn't
+  // automatically reset
+  export var focusOther:boolean=false;
 
 
 
@@ -114,6 +119,16 @@
     {
       ref.scrollIntoView({block:"nearest"});
       focusMarked=false;
+    }
+  }
+
+  // trigger focus, then trigger focused other event which should clear the focus
+  // prop. otherwise it will focus again
+  $: {
+    if (focusOther && ref)
+    {
+      ref.scrollIntoView({block:"nearest"});
+      dispatch("focusedOther");
     }
   }
 </script>

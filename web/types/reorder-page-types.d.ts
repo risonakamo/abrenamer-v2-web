@@ -24,6 +24,7 @@ interface RenderedFileItem extends FileItemData
     selected:boolean
     selectedCount:number
     marked:boolean
+    lastItemFocus:boolean
 
     // this should not be filled out if the item is not an image
     imagePath:string|undefined
@@ -32,6 +33,7 @@ interface RenderedFileItem extends FileItemData
     onDragStart():void
     onDrop(e:CustomEvent<DragEvent>):void
     onRClick():void
+    onFocusOther():void
 }
 
 /** group of file items */
