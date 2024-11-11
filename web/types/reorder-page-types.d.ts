@@ -29,7 +29,7 @@ interface RenderedFileItem extends FileItemData
     // this should not be filled out if the item is not an image
     imagePath:string|undefined
 
-    onClick():void
+    onClick(e:MouseEvent):void
     onDragStart():void
     onDrop(e:CustomEvent<DragEvent>):void
     onRClick():void

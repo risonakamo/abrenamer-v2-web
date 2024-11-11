@@ -9,7 +9,7 @@ import NewGroupDropZone from "@/components/new-group-drop-zone/new-group-drop-zo
 import FileItemGroupContainer
   from "@/components/file-item-group-container/file-item-group-container.svelte";
 import {moveItemsAfter, moveItemsIntoGroup, purgeEmptyGroups,
-  purgeItemsFromGroups} from "@/lib/file-group";
+  purgeItemsFromGroups,rangeSelectItems} from "@/lib/file-group";
 import DragProxy from "@/components/drag-proxy/drag-proxy.svelte";
 import {filesListToPathList, isImage,normalisePaths} from "@/lib/path-lib";
 import InitialDropZone from "@/components/initial-drop-zone/initial-drop-zone.svelte";
@@ -55,6 +55,10 @@ var lastMovedItem:string|undefined=$state(undefined);
 // when enabled, scroll to the last moved item. get unset after scroll is complete
 var focusLastMoved:boolean=$state(false);
 
+// path of last item clicked on to toggle selection
+// gets cleared upon doing other actions such as
+var lastItemSelected:string|undefined=$state(undefined);
+
 
 
 // --- funcs
@@ -75,6 +79,7 @@ function toggleSelectedItem(filepath:string):void
     selectedFileItemsOrdered.push(filepath);
   }
 
+  lastItemSelected=filepath;
   selectedFileItemsOrdered=selectedFileItemsOrdered;
 }
 
@@ -475,9 +480,21 @@ var renderedFileGroups:RenderedFileGroup[]=$derived.by(()=>{
       items:_.map(filegroup.items,(filepath:string):RenderedFileItem=>{
         const item:FileItemData=fileItemsData[filepath];
 
-        /** clicked on tile. toggle the item from selected */
-        function h_tileClick():void
+        /** clicked on tile. toggle the item from selected.
+         *  if shift click, trigger shift select with current item as the last item */
+        function h_tileClick(e:MouseEvent):void
         {
+          if (e.shiftKey && lastItemSelected)
+          {
+            selectedFileItemsOrdered=rangeSelectItems(
+              fileGroups,
+              selectedFileItemsOrdered,
+              lastItemSelected,
+              filepath,
+            );
+            return;
+          }
+
           toggleSelectedItem(item.filepath);
         }
 

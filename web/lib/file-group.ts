@@ -240,3 +240,67 @@ export function purgeEmptyGroups(groups:FileItemGroup[]):FileItemGroup[]
         return group.items.length==0;
     });
 }
+
+/** performs range select or deselect between 2 target items.
+ *  see shift-select-algorithm.md. returns new selected items array */
+export function rangeSelectItems(
+    groups:FileItemGroup[],
+    selectedItems:string[],
+    firstItem:string,
+    lastItem:string,
+):string[]
+{
+    const items:string[]=flattenGroups(groups);
+
+    if (!items.includes(firstItem) || !items.includes(lastItem))
+    {
+        console.error("missing first item or last item from items list");
+        return selectedItems;
+    }
+
+    // deselect operation if the 1st item is not selected
+    const deselecting:boolean=!selectedItems.includes(firstItem);
+
+    // if index of the 1st item is greater than the last item, last item came first, so
+    // doing reverse operation
+    var firstIndex:number=_.findIndex(items,(item:string):boolean=>{
+        return item==firstItem;
+    });
+    var lastIndex:number=_.findIndex(items,(item:string):boolean=>{
+        return item==lastItem;
+    });
+    const reverseOperation:boolean=firstIndex>lastIndex;
+
+    // if reverse, flip the items array, and recalculate the indices
+    if (reverseOperation)
+    {
+        _.reverse(items);
+
+        firstIndex=_.findIndex(items,(item:string):boolean=>{
+            return item==firstItem;
+        });
+        lastIndex=_.findIndex(items,(item:string):boolean=>{
+            return item==lastItem;
+        });
+    }
+
+    // array of all the items to operate on
+    const targetItems:string[]=items.slice(firstIndex,lastIndex+1);
+    const targetItemsSet:Set<string>=new Set(targetItems);
+
+    // start creating new selected items set. purge all target items from the set
+    var newSelectedItems:string[]=_.reject(selectedItems,(selectedItem:string):boolean=>{
+        return targetItemsSet.has(selectedItem);
+    });
+
+    // if deselecting, already done
+    if (deselecting)
+    {
+        return newSelectedItems;
+    }
+
+    // otherwise if selecting, add all the target items to the end of the new selected items list
+    newSelectedItems=[...newSelectedItems,...targetItems];
+
+    return newSelectedItems;
+}
