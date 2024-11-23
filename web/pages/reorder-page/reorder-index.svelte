@@ -3,6 +3,7 @@ import _ from "lodash";
 import {extname,basename} from "path-browserify";
 import normalise from "normalize-path";
 import {onMount} from "svelte";
+import {Trash} from "lucide-svelte";
 
 import ImageTile from "@/components/image-tile/image-tile.svelte";
 import NewGroupDropZone from "@/components/new-group-drop-zone/new-group-drop-zone.svelte";
@@ -17,7 +18,6 @@ import Button1 from "@/components/button1/button1.svelte";
 import {getItemsData, setItemsData} from "@/api/bridge-api";
 import DropZone2 from "@/components/drop-zone2/drop-zone2.svelte";
 import PreviewOverlay from "@/components/preview-overlay/preview-overlay.svelte";
-import {Trash} from "lucide-svelte";
 
 /** load data from localstorage */
 onMount(async ()=>{
@@ -197,12 +197,12 @@ function addItemsToNewGroup(items:string[]):void
 
   const newGroupIndex:number=fileGroups.length-1;
 
-  fileGroups=moveItemsIntoGroup(
+  fileGroups=purgeEmptyGroups(moveItemsIntoGroup(
     fileGroups,
     items,
     newGroupIndex,
     "front",
-  );
+  ));
 
   lastMovedItem=items[0];
   focusLastMoved=true;
