@@ -3,27 +3,30 @@ import {findRule, PremadeRules} from "@/lib/premade-rules";
 
 
 // --- props
-// title of the renamer rule box
-export var titleText:string="";
-// text to display next to the item count
-export var itemCountText:string="";
-// the item count value
-export var itemCount:number=0;
+var {
+    // title of the renamer rule box
+    titleText="",
+    // text to display next to the item count
+    itemCountText="",
+    // the item count value
+    itemCount=0,
+    // value of the rule input box
+    ruleInputBoxText=$bindable("{{inc}}"),
+}:{
+    titleText:string
+    itemCountText:string
+    itemCount:number
+    ruleInputBoxText:string
+}=$props();
 
 
 
 // --- state
-// value of the rule input box
-var ruleInputBoxText:string="{{inc}}";
-
 // rule index that is currently selected. set to -1 for "custom rule"
-var selectedRuleI:number=0;
+var selectedRuleI:number=$state(0);
 
-
-// --- simple derived
 // actual selected rule obj
-var selectedRule:PremadeRenameRule=PremadeRules[0];
-$: selectedRule=PremadeRules[selectedRuleI];
+var selectedRule:PremadeRenameRule=$derived(PremadeRules[selectedRuleI]);
 
 
 
@@ -54,11 +57,11 @@ function h_selectedRule():void
     <div class="container">
         <p class="input-box-label">Rule</p>
         <input type="text" class="themed-input-box" bind:value={ruleInputBoxText}
-            on:change={h_ruleInputChange}/>
+            onchange={h_ruleInputChange}/>
 
         <p class="input-box-label">Template</p>
         <select class="themed-selector-box" bind:value={selectedRuleI}
-            on:change={h_selectedRule}
+            onchange={h_selectedRule}
         >
             <option disabled hidden value={-1}>Custom Rule</option>
             {#each PremadeRules as rule,ruleI}

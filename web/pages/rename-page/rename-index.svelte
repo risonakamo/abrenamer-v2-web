@@ -1,19 +1,12 @@
 <script lang="ts">
 import {onMount} from "svelte";
+import _ from "lodash";
 
 import Button1 from "@/components/button1/button1.svelte";
 import RenameRuleSelector from
     "@/components/rename-rule-selector/rename-rule-selector.svelte";
 import {getItemsData,getDefaultOutputDir} from "@/api/bridge-api";
-import _ from "lodash";
-
-// currently selected output dir
-var outputDirText:string="";
-
-var itemsdata:ItemsData={
-    fileItemsData:{},
-    fileGroups:[],
-};
+import {fileGroupToGroupedPaths} from "@/lib/file-group";
 
 // load items data, set output dir to default output dir
 onMount(async ()=>{
@@ -22,10 +15,34 @@ onMount(async ()=>{
     outputDirText=await getDefaultOutputDir();
 });
 
+// currently selected output dir
+var outputDirText:string=$state("");
+
+var itemsdata:ItemsData=$state({
+    fileItemsData:{},
+    fileGroups:[],
+});
+
+var groupRenameRule:string=$state("{{inc}}");
+var itemsRenameRule:string=$state("{{inc}}");
+
 /** back button, return to reorder page */
 function h_backButton():void
 {
     window.location.href="reorder-page.html";
+}
+
+function h_copyButton():void
+{
+    const renameRequest:RenameRequest={
+        items:fileGroupToGroupedPaths(itemsdata.fileGroups),
+        groupRenameRule:groupRenameRule,
+        itemRenameRule:itemsRenameRule,
+        outputDir:outputDirText,
+        renameMode:"copy",
+    };
+
+    console.log(renameRequest);
 }
 
 </script>
@@ -53,11 +70,13 @@ function h_backButton():void
     <div class="rename-rules">
         <div class="rule-contain">
             <RenameRuleSelector titleText="Groups Rename Rule" itemCountText="Groups"
-                itemCount={itemsdata.fileGroups.length}/>
+                itemCount={itemsdata.fileGroups.length}
+                bind:ruleInputBoxText={groupRenameRule}/>
         </div>
         <div class="rule-contain">
             <RenameRuleSelector titleText="Items Rename Rule" itemCountText="Items"
-                itemCount={_.size(itemsdata.fileItemsData)}/>
+                itemCount={_.size(itemsdata.fileItemsData)}
+                bind:ruleInputBoxText={itemsRenameRule}/>
         </div>
     </div>
 

@@ -304,3 +304,11 @@ export function rangeSelectItems(
 
     return newSelectedItems;
 }
+
+/** converted file item group list to simpler grouped paths */
+export function fileGroupToGroupedPaths(groups:FileItemGroup[]):GroupedPaths
+{
+    return _.map(groups,(group:FileItemGroup):string[]=>{
+        return group.items;
+    });
+}
