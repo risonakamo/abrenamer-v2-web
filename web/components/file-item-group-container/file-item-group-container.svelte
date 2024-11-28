@@ -43,7 +43,7 @@
   on:dragenter={h_dragEnter} on:dragleave={h_dragOut} on:drop={h_drop}
   on:dragend={h_dragend} on:dragover|preventDefault
 >
-  <h2>{title} ({numItems})</h2>
+  <h2>{title} ({numItems} items)</h2>
   <div class="contents">
     <slot/>
   </div>

@@ -67,6 +67,10 @@ function h_moveButton():void
 </style>
 
 <main>
+    <div class="message-zone hidden">
+
+    </div>
+
     <div class="submit-zone">
         <div class="contain">
             <p class="input-box-label">Output Location</p>
