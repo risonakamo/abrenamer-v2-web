@@ -27,7 +27,7 @@ var groupRenameRule:string=$state("{{inc}}");
 var itemsRenameRule:string=$state("{{inc}}");
 
 /** helper to make and send rename request using all the current information */
-function sendRenameRequest(mode:RenameMode):void
+async function sendRenameRequest(mode:RenameMode):Promise<void>
 {
     const renameRequest:RenameRequest={
         items:fileGroupToGroupedPaths($state.snapshot(itemsdata).fileGroups),
@@ -37,7 +37,9 @@ function sendRenameRequest(mode:RenameMode):void
         renameMode:mode,
     };
 
-    doRename(renameRequest);
+    const result:RenameRequestStatus=await doRename(renameRequest);
+
+    console.log(result);
 }
 
 /** back button, return to reorder page */
