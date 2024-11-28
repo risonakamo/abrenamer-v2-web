@@ -611,7 +611,7 @@ var showInitialDropZone:boolean=$derived(_.size(fileItemsData)==0);
       </DropZone2>
     </div>
     <div class="rename-button-zone">
-      <Button1 text="Rename" on:click={h_renameButtonClick}/>
+      <Button1 text="Rename" onclick={h_renameButtonClick}/>
     </div>
   </div>
 

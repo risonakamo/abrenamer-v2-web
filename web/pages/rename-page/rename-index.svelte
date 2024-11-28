@@ -5,7 +5,7 @@ import _ from "lodash";
 import Button1 from "@/components/button1/button1.svelte";
 import RenameRuleSelector from
     "@/components/rename-rule-selector/rename-rule-selector.svelte";
-import {getItemsData,getDefaultOutputDir} from "@/api/bridge-api";
+import {getItemsData,getDefaultOutputDir,doRename} from "@/api/bridge-api";
 import {fileGroupToGroupedPaths} from "@/lib/file-group";
 
 // load items data, set output dir to default output dir
@@ -26,23 +26,36 @@ var itemsdata:ItemsData=$state({
 var groupRenameRule:string=$state("{{inc}}");
 var itemsRenameRule:string=$state("{{inc}}");
 
+/** helper to make and send rename request using all the current information */
+function sendRenameRequest(mode:RenameMode):void
+{
+    const renameRequest:RenameRequest={
+        items:fileGroupToGroupedPaths($state.snapshot(itemsdata).fileGroups),
+        groupRenameRule:groupRenameRule,
+        itemRenameRule:itemsRenameRule,
+        outputDir:outputDirText,
+        renameMode:mode,
+    };
+
+    doRename(renameRequest);
+}
+
 /** back button, return to reorder page */
 function h_backButton():void
 {
     window.location.href="reorder-page.html";
 }
 
+/** clicked copy button. send the rename request */
 function h_copyButton():void
 {
-    const renameRequest:RenameRequest={
-        items:fileGroupToGroupedPaths(itemsdata.fileGroups),
-        groupRenameRule:groupRenameRule,
-        itemRenameRule:itemsRenameRule,
-        outputDir:outputDirText,
-        renameMode:"copy",
-    };
+    sendRenameRequest("copy");
+}
 
-    console.log(renameRequest);
+/** clicked move button. send rename request for move */
+function h_moveButton():void
+{
+    sendRenameRequest("move");
 }
 
 </script>
@@ -58,10 +71,10 @@ function h_copyButton():void
             <input type="text" class="themed-input-box" bind:value={outputDirText}/>
             <div class="button-contain">
                 <div class="inner-contain">
-                    <Button1 text="Move"/>
+                    <Button1 text="Move" onclick={h_moveButton}/>
                 </div>
                 <div class="inner-contain">
-                    <Button1 text="Rename"/>
+                    <Button1 text="Copy" onclick={h_copyButton}/>
                 </div>
             </div>
         </div>
@@ -81,6 +94,6 @@ function h_copyButton():void
     </div>
 
     <div class="bottom-zone">
-        <Button1 text="Cancel" on:click={h_backButton}/>
+        <Button1 text="Back to Reorder" onclick={h_backButton}/>
     </div>
 </main>

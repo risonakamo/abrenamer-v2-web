@@ -1,11 +1,17 @@
 <script lang="ts">
-    export var text:string="";
+var {
+    text="",
+    onclick
+}:{
+    text:string
+    onclick?():void
+}=$props();
 </script>
 
 <style lang="sass">
     @use "./button1.sass"
 </style>
 
-<div class="button1" on:click>
+<div class="button1" onclick={onclick}>
     <p>{text}</p>
 </div>
