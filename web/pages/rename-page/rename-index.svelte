@@ -26,6 +26,9 @@ var itemsdata:ItemsData=$state({
 var groupRenameRule:string=$state("{{inc}}");
 var itemsRenameRule:string=$state("{{inc}}");
 
+// the last rename request status recved
+var lastRenameRequestStatus:RenameRequestStatus|undefined=$state(undefined);
+
 /** helper to make and send rename request using all the current information */
 async function sendRenameRequest(mode:RenameMode):Promise<void>
 {
@@ -37,9 +40,7 @@ async function sendRenameRequest(mode:RenameMode):Promise<void>
         renameMode:mode,
     };
 
-    const result:RenameRequestStatus=await doRename(renameRequest);
-
-    console.log(result);
+    lastRenameRequestStatus=await doRename(renameRequest);
 }
 
 /** back button, return to reorder page */
@@ -67,8 +68,12 @@ function h_moveButton():void
 </style>
 
 <main>
-    <div class="message-zone hidden">
-
+    <div class="message-zone"
+        class:hidden={!lastRenameRequestStatus}
+        class:error={lastRenameRequestStatus?.status=="error"}
+        class:success={lastRenameRequestStatus?.status=="success"}
+    >
+        <p>{lastRenameRequestStatus?.description || ""}</p>
     </div>
 
     <div class="submit-zone">
