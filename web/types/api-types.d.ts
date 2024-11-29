@@ -14,6 +14,7 @@ interface Bridge
 {
     setItemsData(items:ItemsData):void
     getItemsData():Promise<ItemsData>
+    clearItemsData():Promise<void>
     getDefaultOutputDir():Promise<string>
     doRename(renameRequest:RenameRequest):Promise<RenameRequestStatus>
 }

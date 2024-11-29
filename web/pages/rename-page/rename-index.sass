@@ -33,32 +33,36 @@ main
     &.empty
         margin-bottom: 0
 
-.submit-zone
-    margin-bottom: 30px
-    display: flex
-    justify-content: center
-
-    .contain
-        width: 500px
-
-        .button-contain
-            display: flex
-
-            .inner-contain
-                flex: 1
-                justify-content: center
-                display: flex
-
-.rename-rules
-    display: flex
-    justify-content: center
-    margin-bottom: 30px
-
-    .rule-contain
+.controls
+    .submit-zone
+        margin-bottom: 30px
         display: flex
         justify-content: center
-        align-items: center
-        padding: 12px
+
+        .contain
+            width: 500px
+
+            .button-contain
+                display: flex
+
+                .inner-contain
+                    flex: 1
+                    justify-content: center
+                    display: flex
+
+    .rename-rules
+        display: flex
+        justify-content: center
+        margin-bottom: 30px
+
+        .rule-contain
+            display: flex
+            justify-content: center
+            align-items: center
+            padding: 12px
+
+    &.hidden
+        display: none
 
 .bottom-zone
     display: flex
