@@ -5,8 +5,8 @@ import _ from "lodash";
 import Button1 from "@/components/button1/button1.svelte";
 import RenameRuleSelector from
     "@/components/rename-rule-selector/rename-rule-selector.svelte";
-import {getItemsData,getDefaultOutputDir,doRename,
-    clearItemsData} from "@/api/bridge-api";
+import {getItemsData,getDefaultOutputDir,doRename,clearItemsData,
+    openExplorer} from "@/api/bridge-api";
 import {fileGroupToGroupedPaths} from "@/lib/file-group";
 
 // load items data, set output dir to default output dir
@@ -96,6 +96,11 @@ function h_moveButton():void
     sendRenameRequest("move");
 }
 
+/** clicked open explorer. use open explorer api func on the current output path*/
+function h_openExplorer():void
+{
+    openExplorer(outputDirText);
+}
 </script>
 
 <style lang="sass">
@@ -144,6 +149,10 @@ function h_moveButton():void
 
         <div class="bottom-zone">
             <Button1 text="Back to Reorder" onclick={h_backButton}/>
+
+            {#if successfulRename}
+                <Button1 text="Open Output" onclick={h_openExplorer}/>
+            {/if}
         </div>
     </div>
 </main>

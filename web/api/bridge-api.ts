@@ -6,4 +6,5 @@ export const {
     clearItemsData,
     getDefaultOutputDir,
     doRename,
+    openExplorer,
 }=((window as any).electron as Bridge);

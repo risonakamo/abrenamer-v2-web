@@ -17,6 +17,7 @@ interface Bridge
     clearItemsData():Promise<void>
     getDefaultOutputDir():Promise<string>
     doRename(renameRequest:RenameRequest):Promise<RenameRequestStatus>
+    openExplorer(path:string):void
 }
 
 /** collection of fields consisting of the current file items data */
