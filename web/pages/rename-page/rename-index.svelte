@@ -30,6 +30,10 @@ var itemsRenameRule:string=$state("{{inc}}");
 // the last rename request status recved
 var lastRenameRequestStatus:RenameRequestStatus|undefined=$state(undefined);
 
+// lockout while rename is occuring. lockout prevents controls from being
+// used and fades them.
+var lockoutEnabled:boolean=$state(false);
+
 // while succesful rename active, rename page is disabled with only a button
 // to clear and go back to reorder page
 var successfulRename:boolean=$derived.by(()=>{
@@ -56,7 +60,16 @@ async function sendRenameRequest(mode:RenameMode):Promise<void>
         renameMode:mode,
     };
 
+    lastRenameRequestStatus={
+        status:"info",
+        description:"Rename in progress",
+    };
+
+    lockoutEnabled=true;
+
     lastRenameRequestStatus=await doRename(renameRequest);
+
+    lockoutEnabled=false;
 }
 
 /** back button, return to reorder page.
@@ -98,37 +111,39 @@ function h_moveButton():void
         <p>{lastRenameRequestStatus?.description || ""}</p>
     </div>
 
-    <div class="controls" class:hidden={controlsHidden}>
-        <div class="submit-zone">
-            <div class="contain">
-                <p class="input-box-label">Output Location</p>
-                <input type="text" class="themed-input-box" bind:value={outputDirText}/>
-                <div class="button-contain">
-                    <div class="inner-contain">
-                        <Button1 text="Move" onclick={h_moveButton}/>
+    <div class="lockout-zone" class:lockout={lockoutEnabled}>
+        <div class="controls" class:hidden={controlsHidden}>
+            <div class="submit-zone">
+                <div class="contain">
+                    <p class="input-box-label">Output Location</p>
+                    <input type="text" class="themed-input-box" bind:value={outputDirText}/>
+                    <div class="button-contain">
+                        <div class="inner-contain">
+                            <Button1 text="Move" onclick={h_moveButton}/>
+                        </div>
+                        <div class="inner-contain">
+                            <Button1 text="Copy" onclick={h_copyButton}/>
+                        </div>
                     </div>
-                    <div class="inner-contain">
-                        <Button1 text="Copy" onclick={h_copyButton}/>
-                    </div>
+                </div>
+            </div>
+
+            <div class="rename-rules">
+                <div class="rule-contain">
+                    <RenameRuleSelector titleText="Groups Rename Rule" itemCountText="Groups"
+                        itemCount={itemsdata.fileGroups.length}
+                        bind:ruleInputBoxText={groupRenameRule}/>
+                </div>
+                <div class="rule-contain">
+                    <RenameRuleSelector titleText="Items Rename Rule" itemCountText="Items"
+                        itemCount={_.size(itemsdata.fileItemsData)}
+                        bind:ruleInputBoxText={itemsRenameRule}/>
                 </div>
             </div>
         </div>
 
-        <div class="rename-rules">
-            <div class="rule-contain">
-                <RenameRuleSelector titleText="Groups Rename Rule" itemCountText="Groups"
-                    itemCount={itemsdata.fileGroups.length}
-                    bind:ruleInputBoxText={groupRenameRule}/>
-            </div>
-            <div class="rule-contain">
-                <RenameRuleSelector titleText="Items Rename Rule" itemCountText="Items"
-                    itemCount={_.size(itemsdata.fileItemsData)}
-                    bind:ruleInputBoxText={itemsRenameRule}/>
-            </div>
+        <div class="bottom-zone">
+            <Button1 text="Back to Reorder" onclick={h_backButton}/>
         </div>
-    </div>
-
-    <div class="bottom-zone">
-        <Button1 text="Back to Reorder" onclick={h_backButton}/>
     </div>
 </main>

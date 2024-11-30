@@ -7,7 +7,7 @@ type GroupedPaths=string[][]
 /** possible rename action modes */
 type RenameMode="move"|"copy"
 
-type RenameRequestStatusType="success"|"error"
+type RenameRequestStatusType="success"|"error"|"info"
 
 /** api available to frontend */
 interface Bridge
