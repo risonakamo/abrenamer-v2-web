@@ -14,6 +14,7 @@ export function isImage(itemPath:string):boolean
     {
         case ".png":
         case ".jpg":
+        case ".jpeg":
         case ".gif":
         case ".webp":
         return true;
