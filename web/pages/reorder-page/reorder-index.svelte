@@ -205,7 +205,6 @@ function addItemsToNewGroup(items:string[]):void
   ));
 
   lastMovedItem=items[0];
-  focusLastMoved=true;
 }
 
 /** add all full paths to items data dict */
